@@ -1,2 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
 
+{% block title %}Proyectos de Ejemplo del SDK para Python{% endblock %}
 
+{% block content %}
+<div class="flex-col">
+    <div class="tbk-home-container">
+        <h1 class="title">Proyectos de Ejemplo del SDK para Python</h1>
+        <div class="tbk-home-intro">
+            <img src="{% static 'images/python.svg' %}" alt="PhytonLogo" class="self-center" width="168" height="120">
+            <p class="tbk-home-text">
+                Este proyecto te brinda la oportunidad experimentar con las diversas
+                modalidades de productos que Transbank ofrece a través de su SDK
+                compatible con Python. Conoce de manera práctica las soluciones y
+                servicios que Transbank pone a tu disposición, permitiéndote
+                comprender cómo integrar estas herramientas tecnológicas en tus
+                proyectos y aplicaciones. ¡Explora las opciones disponibles y
+                descubre cómo aprovechar al máximo estas capacidades!
+            </p>
+        </div>
+
+        <hr class="separed-home" />
+
+        <div class="cards-info-container">
+            <div class="card-info ">
+                <div class="card-info-body ">
+                    <img src="{% static 'images/webpay.svg' %}" alt="webpay" width="300" height="74" class="card-info-image">
+                    <p class="card-info-text">El producto más usado para realizar un pago online. Se genera
+                        un único cobro para todos los productos o servicios adquiridos por el tarjetahabiente
+                        (carro de compras). </p>
+                </div>
+                <a href="{% url 'index' %}" class="card-info-link">Ver ejemplos y modalidades</a>
+            </div>
+
+            <div class="card-info ">
+                <div class="card-info-body ">
+                    <img src="{% static 'images/oneclick.svg' %}" alt="webpay" width="300" height="74" class="card-info-image">
+                    <p class="card-info-text">Permite realizar pagos con un solo clic en un comercio habitual
+                        para el tarjetahabiente, una vez que este haya registrado su tarjeta en el comercio.
+                    </p>
+                </div>
+                <a href="#" class="card-info-link">Ver ejemplos y modalidades</a>
+            </div>
+        </div>
+
+        <hr class="separed-home" />
+
+        {% include 'partials/channels.html' %}
+
+    </div>
+</div>
+{% endblock %}
