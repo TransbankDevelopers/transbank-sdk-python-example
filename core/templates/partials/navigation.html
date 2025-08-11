@@ -1,0 +1,14 @@
+{% if navigation %}
+    <div class="nav-container">
+        <span class="nav-title">Contenido en esta página</span>
+        <ul class="nav-list">
+            {% for section_id, title in navigation.items %}
+                <li>
+                    <a href="#{{ section_id }}" class="item">
+                        {{ title }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
