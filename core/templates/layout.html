@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <title>{% block title %}Transbank Sdk Django Example{% endblock %}</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    {% block head %}{% endblock %} {% load static %}
+    <link rel="icon" href="{% static 'icon.png' %}" type="image/png" />
+    <link rel="icon" href="{% static 'icon.svg' %}" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="{% static 'icon.png' %}" />
+
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+
+    <script src="{% static 'js/menu_controller.js' %}"></script>
+  </head>
+  <body>
+    <div class="main-container">
+      {% include 'partials/header.html' %} 
+      <div class="body-container {% if not navigation %} no-nav{% endif %}">
+					{% include 'partials/sidebar.html' %}
+          <div class="body-content ">
+            {% block content %}{% endblock %} 
+            {% include 'partials/channels.html' %}
+          </div>
+					{% if navigation%}
+						<div class="helper-content">    
+							{% include 'partials/navigation.html' %}
+						</div>
+					{% endif %}
+      </div>
+      {% include 'partials/footer.html' %}
+    </div>
+
+    <script src="{% static 'js/sidebar.js' %}"></script>
+    <script src="{% static 'js/navigation.js' %}"></script>
+  </body>
+</html>
