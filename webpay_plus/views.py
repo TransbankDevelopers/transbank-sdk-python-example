@@ -1,7 +1,6 @@
 import random
-from django.urls import reverse
 from django.shortcuts import render
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_GET
 
 from transbank.webpay.webpay_plus.transaction import Transaction
 from transbank.common.integration_commerce_codes import IntegrationCommerceCodes
@@ -14,7 +13,7 @@ def get_transbank_transaction():
         IntegrationApiKeys.WEBPAY
     )
 
-@csrf_exempt
+@require_GET
 def create(request):
     try:
        
@@ -22,7 +21,6 @@ def create(request):
         buy_order = f"O-{random.randint(1, 10000)}"
         session_id = f"S-{random.randint(1, 10000)}"
         amount = random.randint(1000, 2000)
-        # return_url = request.build_absolute_uri(reverse('webpay_plus_commit'))
         return_url = "https://www.google.com"
         
         resp = tx.create(buy_order, session_id, amount, return_url)
