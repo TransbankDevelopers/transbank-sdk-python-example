@@ -16,6 +16,7 @@ Una vez tengas clonado el repositorio, debes instalar las dependencias del proye
 
 ```bash
 cd ruta/del/proyecto
+pipenv install
 pipenv shell
 ```
 
