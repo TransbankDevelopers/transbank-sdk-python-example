@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const navItems = document.querySelectorAll(".nav-container .item");
   if (!navItems.length) return;
 
-  var observer = new IntersectionObserver(
+  let observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
