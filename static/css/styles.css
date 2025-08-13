@@ -862,7 +862,7 @@ code {
   display: none;
   flex-direction: column;
   row-gap: 2.5rem;
-  border-right-width: 1px;
+  border-right: 1px solid;
   border-top-width: 1px;
   border-color: var(--tbk-border);
   position: absolute;
@@ -871,6 +871,7 @@ code {
   z-index: 10;
   background-color: var(--background);
   height: calc(100vh - 80px);
+  min-width: 331px;
   padding: 20px 0px;
   overflow-y: scroll;
 }
