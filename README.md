@@ -7,7 +7,7 @@ Proyecto de ejemplo mostrando el paso a paso de como usar el SDK Python de trans
 ## Requisitos
 
 - Python 3.13.3
-- djangoDjango 5.2.4
+- Django 5.2.4
 - pipenv
 
 ## Instalación
