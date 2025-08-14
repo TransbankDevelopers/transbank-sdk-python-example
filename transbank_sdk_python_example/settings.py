@@ -38,8 +38,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.staticfiles',
-    'core',
-    'webpay_plus',
+    'core.apps.CoreConfig',
+    'webpay_plus.apps.WebpayPlusConfig',
 ]
 
 MIDDLEWARE = [
