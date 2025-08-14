@@ -15,8 +15,26 @@ def get_transbank_transaction():
 
 @require_GET
 def create(request):
-    try:
+    
+    navigation = {
+        "request": "Petición",
+        "response": "Respuesta",
+        "form": "Formulario",
+        "example": "Ejemplo",
+    }
+
+    
+    snippet_request_php = """\
+    use Transbank\\Webpay\\WebpayPlus\\Transaction;
+    use Transbank\\Webpay\\Options;
+    // configuración de la transacción
+    $option = new Options(API_KEY, COMMERCE_CODE, Options::ENVIRONMENT_INTEGRATION);
+    $transaction = new Transaction($option);
+    $response = $transaction->create($buyOrder, $sessionId, $amount, $returnUrl);
+    """
+    try:    
        
+
         tx = get_transbank_transaction()
         buy_order = f"O-{random.randint(1, 10000)}"
         session_id = f"S-{random.randint(1, 10000)}"
@@ -26,9 +44,14 @@ def create(request):
         resp = tx.create(buy_order, session_id, amount, return_url)
         
         context = {
-            'request_data': {'buy_order': buy_order, 'session_id': session_id, 'amount': amount},
+            "active_link": "Webpay Plus",
+            "navigation": navigation,
+            "snippet_request_php": snippet_request_php,
+            
+            
             'respond_data': resp
         }
+      
         return render(request, 'webpay_plus/create.html', context)
        
     except Exception as e:
