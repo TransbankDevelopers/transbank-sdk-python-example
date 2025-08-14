@@ -16,6 +16,7 @@ requests = "==2.32.4"
 sqlparse = "==0.5.3"
 transbank-sdk = "==6.1.0"
 urllib3 = "==2.5.0"
+pygments = "*"
 
 [dev-packages]
 
