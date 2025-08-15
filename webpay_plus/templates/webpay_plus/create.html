@@ -34,9 +34,8 @@
         proceso.
     </p>
 
-    {% filter highlight_code:"text" %}
-		{{ respond }}
-    {% endfilter %}
+    {{ respond_data|prettyjson|highlight_code:"json" }}
+
 
     <h2 id="form">Paso 3: Creación del formulario</h2>
     <p class="mb-32">Utiliza estos datos de respuesta para redireccionar al usuario al formulario de pago al
