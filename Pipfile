@@ -17,6 +17,7 @@ sqlparse = "==0.5.3"
 transbank-sdk = "==6.1.0"
 urllib3 = "==2.5.0"
 pygments = "*"
+django-components = ">=0.141.4"
 
 [dev-packages]
 
