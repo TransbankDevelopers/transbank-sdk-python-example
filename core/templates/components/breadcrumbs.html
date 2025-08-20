@@ -1,0 +1,13 @@
+
+<div class="breadcrumbs-container">
+    {% for item in items %}
+        <div class="breadcrumbs-items">
+            <a href="{{ item.url }}" class="{% if forloop.last %}current-breadcrumb{% endif %}">
+                {{ item.name }}
+            </a>
+            {% if not forloop.last %}
+                <img src="{% static 'images/t-arrow.svg' %}" alt=">" width="24" height="24" />
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
