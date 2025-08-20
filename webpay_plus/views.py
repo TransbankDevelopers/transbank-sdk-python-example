@@ -1,17 +1,12 @@
-import random
+import secrets
 import logging
 
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
-from django.views.decorators.http import require_POST
-from django.views.decorators.csrf import csrf_exempt
 
 from transbank.webpay.webpay_plus.transaction import Transaction
 from transbank.common.integration_commerce_codes import IntegrationCommerceCodes
 from transbank.common.integration_api_keys import IntegrationApiKeys
-
-logging.basicConfig(level=logging.INFO)  
-logger = logging.getLogger(__name__)
 
 def get_transbank_transaction():
     return Transaction.build_for_integration(
@@ -32,10 +27,10 @@ def create(request):
     try:    
         tx = get_transbank_transaction()
         create_tx = {
-            'buy_order': "O-" + str(random.randint(1, 10000)),
-            'session_id': "S-" + str(random.randint(1, 10000)),
+            'buy_order': "O-" + str(secrets.randbelow(1001) + 10000),
+            'session_id': "S-" + str(secrets.randbelow(1001) + 10000),
             'return_url': request.build_absolute_uri("/webpay-plus/commit"),
-            'amount': random.randint(1000, 2000),
+            'amount': secrets.randbelow(1001) + 10000,
         }
         resp = tx.create(create_tx["buy_order"], create_tx["session_id"], create_tx["amount"], create_tx["return_url"])
 
@@ -52,7 +47,6 @@ def create(request):
         return render(request, "webpay_plus/create.html", {'error': str(e)})
 
 
-@csrf_exempt  
 def commit(request):
     tx = get_transbank_transaction()
     try:
@@ -82,7 +76,6 @@ def commit(request):
         return render(request, "error.html", {"error": str(e)})
 
 
-@csrf_exempt
 @require_GET
 def refund(request):
     tx = get_transbank_transaction()
