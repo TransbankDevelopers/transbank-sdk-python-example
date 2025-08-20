@@ -3,6 +3,7 @@ import logging
 
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_http_methods
 
 from transbank.webpay.webpay_plus.transaction import Transaction
 from transbank.common.integration_commerce_codes import IntegrationCommerceCodes
@@ -46,7 +47,7 @@ def create(request):
     except Exception as e:
         return render(request, "webpay_plus/create.html", {'error': str(e)})
 
-
+@require_http_methods(["GET", "POST"])
 def commit(request):
     tx = get_transbank_transaction()
     try:
