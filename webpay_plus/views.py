@@ -1,8 +1,8 @@
 import secrets
-import logging
 
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_POST
 from django.views.decorators.http import require_http_methods
 
 from transbank.webpay.webpay_plus.transaction import Transaction
@@ -47,8 +47,15 @@ def create(request):
     except Exception as e:
         return render(request, "webpay_plus/create.html", {'error': str(e)})
 
-@require_http_methods(["GET", "POST"])
+@require_GET
 def commit(request):
+    return commit_base(request)
+
+@require_POST
+def post_commit(request):
+    return commit_base(request)
+
+def commit_base(request):
     tx = get_transbank_transaction()
     try:
         view = "error/webpay/timeout.html"
