@@ -24,19 +24,17 @@
     </ul>
 
     {% filter highlight_code:"python" %}
+from transbank.common.integration_type import IntegrationType
+from transbank.common.options import WebpayOptions
+from transbank.webpay.webpay_plus.transaction import Transaction
 
-    from transbank.common.integration_type import IntegrationType
-    from transbank.common.options import WebpayOptions
-    from transbank.webpay.webpay_plus.transaction import Transaction
-
-    tx = (Transaction(WebpayOptions(comerce_code, api_key, IntegrationType.TEST)))
-    buy_order = "O-1000"
-    session_id = "S-1000"
-    amount = 2000
-    return_url = "https://www.google.com"
-        
-    resp = tx.create(buy_order, session_id, amount, return_url)
-
+tx = (Transaction(WebpayOptions(comerce_code, api_key, IntegrationType.TEST)))
+buy_order = "O-1000"
+session_id = "S-1000"
+amount = 2000
+return_url = "https://www.google.com"
+    
+resp = tx.create(buy_order, session_id, amount, return_url)
     {% endfilter %}
 
     <h2 class="mt-32" id="response">Paso 2: Respuesta</h2>
@@ -55,12 +53,10 @@
 	
 	{{error}}
     {% filter highlight_code:"html" %}
-
 <form action="https://webpay3gint.transbank.cl/webpayserver/initTransaction" method="POST">
 	<input type="hidden" name="token_ws" value="{{ response_data.token }}" />
 	<input type="submit" value="Pagar" />
 </form>
-	
     {% endfilter %}
 
     <h2 class="mt-32" id="example">Ejemplo</h2>

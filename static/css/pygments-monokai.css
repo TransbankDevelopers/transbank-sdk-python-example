@@ -4,7 +4,7 @@ span.linenos { color: inherit; background-color: transparent; padding-left: 5px;
 td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
 span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
 .pygments .hll { background-color: #49483e }
-.pygments { background: #272822; color: #F8F8F2 }
+.pygments { background: #272822; color: #F8F8F2; padding: 20px;}
 .pygments .c { color: #959077 } /* Comment */
 .pygments .err { color: #ED007E; background-color: #1E0010 } /* Error */
 .pygments .esc { color: #F8F8F2 } /* Escape */
