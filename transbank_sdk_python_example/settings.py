@@ -33,13 +33,15 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+APPEND_SLASH = False
 
 # Application definition
 
 INSTALLED_APPS = [
     'django.contrib.staticfiles',
-    'core',
-    'webpay_plus',
+    'django_components',
+    'core.apps.CoreConfig',
+    'webpay_plus.apps.WebpayPlusConfig',
 ]
 
 MIDDLEWARE = [
@@ -60,6 +62,10 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.request',
             ],
+            'builtins': [
+                'django_components.templatetags.component_tags',
+                "django.templatetags.static"
+            ]
         },
     },
 ]

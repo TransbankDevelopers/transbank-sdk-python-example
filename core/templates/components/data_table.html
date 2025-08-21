@@ -1,0 +1,21 @@
+<div class="tbk-table">
+  <div class="table-column tbk-head">Campo</div>
+  <div class="table-column tbk-head">Valor</div>
+
+  {% for campo, valor in data.items %}
+    <div class="table-column">{{ campo }}</div>
+    <div class="table-column">
+      {% if campo == "details" and valor.0 %}
+        {% for detail in valor %}
+          <div class="details-item">
+            {% for key, val in detail.items %}
+              <div><strong>{{ key }}</strong>: {{ val }}</div>
+            {% endfor %}
+          </div>
+        {% endfor %}
+      {% else %}
+        {{ valor }}
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>
