@@ -113,4 +113,3 @@ def status(request):
 
     except Exception as e:
         return render(request, "error_page.html", {"error": str(e)})
-    
