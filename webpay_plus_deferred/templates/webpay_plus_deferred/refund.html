@@ -1,17 +1,17 @@
 {% extends "layout.html" %}
 {% load static highlight_code %}
 
-{% block title %}Webpay Plus - Reembolsar {% endblock %}
+{% block title %}Webpay Plus Diferido - Reembolsar {% endblock %}
 
 {% block content %}
 
     {% component "breadcrumbs" items=[
         {"name": "Inicio", "url": "/"},
-        {"name": "Webpay Plus", "url": "/webpay-plus/"},
-        {"name": "Reembolsar", "url": "/webpay-plus/refund"}
+        {"name": "Webpay Plus Diferido", "url": "/webpay-plus-deferred/"},
+        {"name": "Reembolsar", "url": "/webpay-plus-deferred/refund"}
     ] %}{% endcomponent %}
 
-    <h1>Webpay Plus - Reembolsar</h1>
+    <h1>Webpay Plus Diferido - Reembolsar</h1>
     <p class="mb-32">
         En esta etapa, tienes la opción de solicitar el reembolso del monto al titular de la tarjeta.
         Dependiendo del monto y el tiempo transcurrido desde la transacción, este proceso podría resultar en una Reversa
@@ -58,7 +58,7 @@
 resp = tx.refund(token, amount)
     {% endfilter %}
 
-    <h2 id="response">Paso 2 - Respuesta</h2>
+    <h2 class="mt-32" id="response">Paso 2 - Respuesta</h2>
     <p class="mb-32">Transbank responderá con el resultado del proceso de reembolso, indicando si se ha realizado una
         Reversa, Anulación o Anulación Parcial.
     </p>
@@ -66,6 +66,6 @@ resp = tx.refund(token, amount)
     {{ response_data|prettyjson|highlight_code:"json" }}
     </div>
 
-    <a href="{% url 'webpay_plus:status' %}?token={{ token }}" class="tbk-button primary mb-32">CONSULTAR ESTADO</a>
+    <a href="{% url 'webpay_plus_deferred:status' %}?token={{ token }}" class="tbk-button primary mb-32">CONSULTAR ESTADO</a>
     
 {% endblock %}

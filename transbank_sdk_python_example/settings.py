@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django_components',
     'core.apps.CoreConfig',
     'webpay_plus.apps.WebpayPlusConfig',
+    'webpay_plus_deferred.apps.WebpayPlusDeferredConfig',
 ]
 
 MIDDLEWARE = [
