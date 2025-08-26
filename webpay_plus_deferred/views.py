@@ -8,6 +8,8 @@ from transbank.webpay.webpay_plus.transaction import Transaction
 from transbank.common.integration_commerce_codes import IntegrationCommerceCodes
 from transbank.common.integration_api_keys import IntegrationApiKeys
 
+ERROR_TEMPLATE = "error_page.html"
+
 def get_transbank_transaction():
     return Transaction.build_for_integration(
         IntegrationCommerceCodes.WEBPAY_PLUS_DEFERRED,
@@ -98,7 +100,7 @@ def capture(request):
         )
 
     except Exception as e:
-        return render(request, "error_page.html", {"error": str(e)})
+        return render(request, ERROR_TEMPLATE, {"error": str(e)})
 
 @require_GET
 def refund(request):
@@ -113,7 +115,7 @@ def refund(request):
         )
 
     except Exception as e:
-        return render(request, "error_page.html", {"error": str(e)})
+        return render(request, ERROR_TEMPLATE, {"error": str(e)})
 
 
 @require_GET
@@ -128,4 +130,4 @@ def status(request):
         )
 
     except Exception as e:
-        return render(request, "error_page.html", {"error": str(e)})
+        return render(request, ERROR_TEMPLATE, {"error": str(e)})
