@@ -3,7 +3,6 @@ import secrets
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
 from django.views.decorators.http import require_POST
-from django.views.decorators.http import require_http_methods
 
 from transbank.webpay.webpay_plus.transaction import Transaction
 from transbank.common.integration_commerce_codes import IntegrationCommerceCodes
@@ -13,7 +12,7 @@ ERROR_TEMPLATE = "error_page.html"
 
 def get_transbank_transaction():
     return Transaction.build_for_integration(
-        IntegrationCommerceCodes.WEBPAY_PLUS,
+        IntegrationCommerceCodes.WEBPAY_PLUS_DEFERRED,
         IntegrationApiKeys.WEBPAY
     )
 
@@ -32,22 +31,22 @@ def create(request):
         create_tx = {
             'buy_order': "O-" + str(secrets.randbelow(1001) + 10000),
             'session_id': "S-" + str(secrets.randbelow(1001) + 10000),
-            'return_url': request.build_absolute_uri("/webpay-plus/commit"),
+            'return_url': request.build_absolute_uri("/webpay-plus-deferred/commit"),
             'amount': secrets.randbelow(1001) + 10000,
         }
         resp = tx.create(create_tx["buy_order"], create_tx["session_id"], create_tx["amount"], create_tx["return_url"])
 
         context = {
-            "active_link": "Webpay Plus",
+            "active_link": "Webpay Plus Diferido",
             "navigation": navigation,
             "request": create_tx,
             'response_data': resp
         }
       
-        return render(request, 'webpay_plus/create.html', context)
+        return render(request, 'webpay_plus_deferred/create.html', context)
        
     except Exception as e:
-        return render(request, "webpay_plus/create.html", {'error': str(e)})
+        return render(request, "webpay_plus_deferred/create.html", {'error': str(e)})
 
 @require_GET
 def commit(request):
@@ -73,11 +72,11 @@ def commit_base(request):
             data["response_data"] = resp
         elif token_ws:
             resp = tx.commit(token_ws)
-            view = "webpay_plus/commit.html"
+            view = "webpay_plus_deferred/commit.html"
             data = {
                 "response_data": resp,
                 "token": token_ws,
-                "returnUrl": request.build_absolute_uri("/webpay_plus/commit"),
+                "returnUrl": request.build_absolute_uri("/webpay_plus_deferred/commit"),
             }
 
         return render(request, view, data)
@@ -85,6 +84,23 @@ def commit_base(request):
     except Exception as e:
         return render(request, "error.html", {"error": str(e)})
 
+
+@require_GET
+def capture(request):
+    tx = get_transbank_transaction()
+    try:
+        token = request.GET.get("token")
+        amount = request.GET.get("amount")
+        buy_order = request.GET.get("buy_order")
+        authorization_code = request.GET.get("authorization_code")
+        resp = tx.capture(token, buy_order, authorization_code, amount)
+
+        return render(
+            request, "webpay_plus_deferred/capture.html", {"response_data": resp, "token": token}
+        )
+
+    except Exception as e:
+        return render(request, ERROR_TEMPLATE, {"error": str(e)})
 
 @require_GET
 def refund(request):
@@ -95,7 +111,7 @@ def refund(request):
         resp = tx.refund(token, amount)
 
         return render(
-            request, "webpay_plus/refund.html", {"response_data": resp, "token": token}
+            request, "webpay_plus_deferred/refund.html", {"response_data": resp, "token": token}
         )
 
     except Exception as e:
@@ -110,7 +126,7 @@ def status(request):
         resp = tx.status(token)
 
         return render(
-            request, "webpay_plus/status.html", {"response_data": resp, "req": request, "token": token}
+            request, "webpay_plus_deferred/status.html", {"response_data": resp, "req": request, "token": token}
         )
 
     except Exception as e:
