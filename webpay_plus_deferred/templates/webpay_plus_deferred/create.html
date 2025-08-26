@@ -29,10 +29,6 @@ from transbank.common.options import WebpayOptions
 from transbank.webpay.webpay_plus.transaction import Transaction
 
 tx = (Transaction(WebpayOptions(comerce_code, api_key, IntegrationType.TEST)))
-buy_order = "O-1000"
-session_id = "S-1000"
-amount = 2000
-return_url = "{{request.return_url}}"
     
 resp = tx.create(buy_order, session_id, amount, return_url)
     {% endfilter %}
