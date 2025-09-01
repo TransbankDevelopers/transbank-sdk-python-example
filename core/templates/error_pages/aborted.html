@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% load static highlight_code %}
+{% block title %}Error{% endblock %}
+
+{% block content %}
+  <h1 id="cancel">{{ product }} - Estado de compra cancelada</h1>
+  <p class="mb-32">
+      El pago de la compra ha sido anulado por el usuario. En esta etapa, después de abandonar el
+      formulario de pago, no es necesario realizar la confirmación. Aquí te proporcionamos información esencial sobre
+      el estado de la transacción anulada:
+  </p>
+
+  <h2>Datos recibidos:</h2>
+  <p class="m-32">
+      Después de completar el flujo en el formulario de pago, recibirás un GET con la siguiente
+      información:
+  </p>
+  {{ request.GET|prettyjson|highlight_code:"json" }}
+
+  <h2 class="mt-32">Otras Utilidades</h2>
+  <p class="mb-32">
+      Tras la anulación de la compra, solo podrás consultar el estado de la transacción en los próximos 7 días después
+      de su realización. Asegúrate de realizar las consultas dentro de este período.
+  </p>
+
+  <h1 id="state">Consulta de Estado de Transacción</h1>
+  <p class="mb-32">
+      Puedes solicitar el estado de una transacción hasta 7 días después de su realización. No hay límite de
+      solicitudes de este tipo durante ese período. Sin embargo, después de pasar los 7 días, ya no podrás revisar el
+      estado de la transacción.
+  </p>
+
+  <h2>Paso 1: Petición</h2>
+  <p class="mb-32">
+      Para realizar la consulta, necesitas el token de la transacción de la cual deseas obtener el estado. Utiliza
+      este token para realizar una llamada al SDK.
+  </p>
+
+  {% filter highlight_code:"python" %}
+    # "{{ request.GET.TBK_TOKEN }}"  
+    resp = tx.status(tbk_token)
+  {% endfilter %}
+  
+  <h2 class="mt-32">Paso 2: Respuesta</h2>
+  <p class="mb-32">
+      Una vez que hayas creado la transacción, aquí encontrarás los datos de respuesta generados por el proceso.
+  </p>
+  <div class="mb-32">
+
+    {{ response_data|prettyjson|highlight_code:"json" }}
+  </div>
+  
+  
+{% endblock %}
