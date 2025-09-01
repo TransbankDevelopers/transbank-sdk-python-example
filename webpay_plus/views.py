@@ -86,7 +86,7 @@ def commit_base(request):
         return render(request, view, data)
 
     except Exception as e:
-        return render(request, "general_error.html", {"error": str(e)})
+        return render(request, "error_pages/general_error.html", {"error": str(e)})
 
 
 @require_GET
