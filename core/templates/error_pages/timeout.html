@@ -13,6 +13,7 @@
         Cuando ocurre un error en la operación con la API, el SDK lo captura automáticamente.
         A continuación, se muestra el detalle de la excepción, lo que te permitirá identificar y comprender el problema.
     </p>
-
-    {{ request.GET|prettyjson|highlight_code:"json" }}
+    <div class="mb-32">
+        {{ request.GET|prettyjson|highlight_code:"json" }}
+    </div>
 {% endblock %}
