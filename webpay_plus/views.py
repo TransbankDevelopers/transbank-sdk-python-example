@@ -61,14 +61,15 @@ def commit_base(request):
     tx = get_transbank_transaction()
     try:
         view = "error/webpay/timeout.html"
-        data = {"request": request}
+        data = {"request": request, "product": "Webpay Plus"}
         tbk_token = request.GET.get("TBK_TOKEN") or request.POST.get("TBK_TOKEN")
         token_ws = request.GET.get("token_ws") or request.POST.get("token_ws")
-
+        view = "error_pages/timeout.html"
+        
         if tbk_token and token_ws:
-            view = "error/webpay/form_error.html"
+            view = "error_pages/form_error.html"
         elif tbk_token:
-            view = "error/webpay/aborted.html"
+            view = "error_pages/aborted.html"
             resp = tx.status(tbk_token)
             data["response_data"] = resp
         elif token_ws:
@@ -79,11 +80,13 @@ def commit_base(request):
                 "token": token_ws,
                 "returnUrl": request.build_absolute_uri("/webpay_plus/commit"),
             }
+        
+           
 
         return render(request, view, data)
 
     except Exception as e:
-        return render(request, "error.html", {"error": str(e)})
+        return render(request, "error_pages/general_error.html", {"error": str(e)})
 
 
 @require_GET
