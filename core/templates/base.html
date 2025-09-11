@@ -1,25 +1,41 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <title>{% block title %}Transbank Sdk Python Example{% endblock %}</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="mobile-web-app-capable" content="yes" />
+    <head>
+        <title>
+            {% block title %}Transbank Sdk Python Example{% endblock %}
+        </title>
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
 
-    {% block head %}{% endblock %} {% load static %}
-    <link rel="icon" href="{% static 'icon.png' %}" type="image/png" />
-    <link rel="icon" href="{% static 'icon.svg' %}" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="{% static 'icon.png' %}" />
+        <!-- Google tag (gtag.js) -->
+        <script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-02BDNS38Y1"
+        ></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
 
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+            gtag("config", "G-02BDNS38Y1");
+        </script>
 
-    <script src="{% static 'js/menu_controller.js' %}"></script>
-  </head>
-  <body>
-    <div class="layout-home">
-      {% include 'partials/header.html' %} 
-      {% block content %}{% endblock %} 
-      {% include 'partials/footer.html' %}
-    </div>
-  </body>
+        {% block head %}{% endblock %} {% load static %}
+        <link rel="icon" href="{% static 'icon.png' %}" type="image/png" />
+        <link rel="icon" href="{% static 'icon.svg' %}" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="{% static 'icon.png' %}" />
+
+        <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+
+        <script src="{% static 'js/menu_controller.js' %}"></script>
+    </head>
+    <body>
+        <div class="layout-home">
+            {% include 'partials/header.html' %} {% block content %}{% endblock
+            %} {% include 'partials/footer.html' %}
+        </div>
+    </body>
 </html>
