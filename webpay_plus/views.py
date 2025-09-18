@@ -2,8 +2,8 @@ import secrets
 
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
-from django.views.decorators.http import require_POST
 from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_exempt
 
 from transbank.webpay.webpay_plus.transaction import Transaction
 from transbank.common.integration_commerce_codes import IntegrationCommerceCodes
@@ -49,15 +49,9 @@ def create(request):
     except Exception as e:
         return render(request, "webpay_plus/create.html", {'error': str(e)})
 
-@require_GET
+@require_http_methods(["GET", "POST"])
+@csrf_exempt
 def commit(request):
-    return commit_base(request)
-
-@require_POST
-def post_commit(request):
-    return commit_base(request)
-
-def commit_base(request):
     tx = get_transbank_transaction()
     try:
         view = "error/webpay/timeout.html"

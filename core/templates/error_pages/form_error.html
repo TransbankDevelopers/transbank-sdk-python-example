@@ -17,6 +17,6 @@
       Al producirse un error en el formulario de pago, recibirás un POST con la siguiente información:
   </p>
   <div class="mb-32">
-    {{ request.GET|prettyjson|highlight_code:"json" }}
+    {{ request.POST|prettyjson|highlight_code:"json" }}
   </div>
 {% endblock %}
