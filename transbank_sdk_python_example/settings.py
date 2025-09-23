@@ -33,7 +33,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "proyecto-ejemplo-python.continuumhq.dev",
-    "www.proyecto-ejemplo-python.continuumhq.dev",
+    "proyecto-ejemplo-python.transbankdevelopers.cl",
     "127.0.0.1",
     "localhost",
 ]
