@@ -9,7 +9,7 @@ from transbank.webpay.webpay_plus.transaction import Transaction
 from transbank.common.integration_commerce_codes import IntegrationCommerceCodes
 from transbank.common.integration_api_keys import IntegrationApiKeys
 
-ERROR_TEMPLATE = "error_page.html"
+ERROR_TEMPLATE = "error_pages/general_error.html"
 
 def get_transbank_transaction():
     return Transaction.build_for_integration(
