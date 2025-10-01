@@ -47,7 +47,7 @@ def create(request):
         return render(request, 'webpay_plus_deferred/create.html', context)
        
     except Exception as e:
-        return render(request, "webpay_plus_deferred/create.html", {'error': str(e)})
+        return render(request, ERROR_TEMPLATE, {'error': str(e)})
 
 @require_http_methods(["GET", "POST"])
 @csrf_exempt
@@ -78,7 +78,7 @@ def commit(request):
         return render(request, view, data)
 
     except Exception as e:
-        return render(request, "error_pages/general_error.html", {"error": str(e)})
+        return render(request, ERROR_TEMPLATE, {"error": str(e)})
 
 
 @require_GET
