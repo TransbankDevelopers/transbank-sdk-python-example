@@ -25,6 +25,22 @@
                         
                     </ul>
                 </li>
+
+                <li style="margin-bottom:20px;">
+                    <button class="sidebar-collapsible-title" data-collapsible="webpay-plus-deferred">
+                        <span class="general-text">Webpay Plus Diferido</span>
+                        <img src="{% static 'images/t-arrow.svg' %}" class="arrow" alt="t-arrow" width="24"
+                            height="24" />
+                    </button>
+                    <ul class="collapsible-content" id="collapse-webpay-plus-deferred">
+                        <li class="collapsible-items">
+                            <a href="{% url 'webpay_plus_deferred:create' %}" class="tbk-sidebar-item">
+                                Flujo Completo
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </li>
             </ul>
             <hr class="sidebar-divider" />
         </div>

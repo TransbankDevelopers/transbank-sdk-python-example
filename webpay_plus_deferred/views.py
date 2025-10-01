@@ -9,7 +9,7 @@ from transbank.webpay.webpay_plus.transaction import Transaction
 from transbank.common.integration_commerce_codes import IntegrationCommerceCodes
 from transbank.common.integration_api_keys import IntegrationApiKeys
 
-ERROR_TEMPLATE = "error_page.html"
+ERROR_TEMPLATE = "error_pages/general_error.html"
 
 def get_transbank_transaction():
     return Transaction.build_for_integration(
@@ -47,7 +47,7 @@ def create(request):
         return render(request, 'webpay_plus_deferred/create.html', context)
        
     except Exception as e:
-        return render(request, "webpay_plus_deferred/create.html", {'error': str(e)})
+        return render(request, ERROR_TEMPLATE, {'error': str(e)})
 
 @require_http_methods(["GET", "POST"])
 @csrf_exempt
@@ -78,7 +78,7 @@ def commit(request):
         return render(request, view, data)
 
     except Exception as e:
-        return render(request, "error_pages/general_error.html", {"error": str(e)})
+        return render(request, ERROR_TEMPLATE, {"error": str(e)})
 
 
 @require_GET
