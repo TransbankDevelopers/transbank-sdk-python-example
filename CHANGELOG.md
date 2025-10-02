@@ -13,5 +13,5 @@ Versión inicial del proyecto de ejemplo.
 
 - Estructura inicial del proyecto.
 - Documentación inicial en `README.md` con instrucciones de instalación y uso.
-- Se agrega el producto Webpay Plus en su modalidad síncrona y diferida.
+- Se agrega el producto Webpay Plus en su modalidad simultanea y diferida.
 - Se agrega google analytics
