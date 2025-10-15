@@ -14,10 +14,24 @@ Proyecto de ejemplo mostrando el paso a paso de como usar el SDK Python de trans
 
 Una vez tengas clonado el repositorio, debes instalar las dependencias del proyecto. Corre los siguientes comandos en una terminal para instalar las dependencias:
 
+
+- Instala las dependencias del entorno:
+
 ```bash
 cd ruta/del/proyecto
 pipenv install
+```
+
+- Activa el entorno virtual:
+
+```bash
 pipenv shell
+```
+
+- Aplica las migraciones de base de datos (requeridas para la gestión de sesiones):
+
+```bash
+python manage.py migrate 
 ```
 
 ## Ejecución Desarrollo
