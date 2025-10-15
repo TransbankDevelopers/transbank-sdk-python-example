@@ -148,7 +148,8 @@ def refund(request):
 
         resp = transaction.refund(buy_order, child_commerce_code, child_buy_order, amount)
 
-        return render(request, "oneclick_mall_deferred/refund.html", {"response_data": resp})
+        return render(request, "oneclick_mall_deferred/refund.html", 
+                      {"response_data": resp, "buy_order": buy_order })
 
     except Exception as e:
         return render(request, ERROR_TEMPLATE, {"error": str(e)})
