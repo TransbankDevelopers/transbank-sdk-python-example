@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% load static highlight_code %}
+
+{% block title %}Webpay Oneclick Mall Diferido - Borrar usuario{% endblock %}
+
+{% block content %}
+
+{% component "breadcrumbs" items=[
+    {"name": "Inicio", "url": "/"},
+    {"name": "Webpay Oneclick Mall Diferido", "url": "/oneclick-mall-diferido/start"},
+    {"name": "Borrar usuario", "url": "#"}
+] %}{% endcomponent %}
+
+<h1>Webpay Oneclick Mall Diferido - Borrar usuario</h1>
+
+<p class="mb-32">
+  En este paso fundamental, procederemos a eliminar la inscripción del usuario y su medio de pago.
+</p>
+
+<h2 id="request">Paso 1: Petición</h2>
+<p class="mb-32">
+  Para llevar a cabo la eliminación, necesitas el <strong>username</strong> (Nombre de Usuario) y el <strong>tbk_user</strong>.
+  Realiza la llamada a <code>MallInscription</code> utilizando el siguiente código:
+</p>
+
+{% filter highlight_code:"python" %}
+resp = inscription.delete(tbk_user, username)
+{% endfilter %}
+
+<h2 id="response" class="mt-32">Paso 2: Respuesta</h2>
+<p class="mb-32">
+  En caso de éxito, Transbank responderá con un código de estado <strong>204 (No Content)</strong>,
+  y el SDK no retornará ningún valor. La eliminación de la inscripción se ha realizado de manera exitosa.
+</p>
+
+<p class="mb-32">
+  En el caso de que no se encuentre el <strong>username</strong> o el <strong>tbk_user</strong>,
+  Transbank responderá con un código de estado <strong>404 (Not Found)</strong>,
+  y el SDK lanzará una excepción del tipo <code>TransbankError</code>.
+</p>
+
+<p class="mb-32">
+  Este proceso garantiza una eliminación segura y eficiente de la inscripción del usuario y su medio de pago asociado.
+  ¡Gracias por confiar en Transbank para tus operaciones seguras!  
+  Si tienes alguna pregunta, estamos aquí para ayudarte.
+</p>
+
+{% endblock %}

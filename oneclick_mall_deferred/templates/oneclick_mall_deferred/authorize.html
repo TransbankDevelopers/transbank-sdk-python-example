@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+{% load static highlight_code %}
+
+{% block title %}Webpay Oneclick Mall Diferido - Autorizar pago{% endblock %}
+
+{% block content %}
+
+{% component "breadcrumbs" items=[
+    {"name": "Inicio", "url": "/"},
+    {"name": "Webpay Oneclick Mall Diferido", "url": "/oneclick-mall-diferido/start"},
+    {"name": "Autorizar pago", "url": "#"}
+] %}{% endcomponent %}
+
+<h1>Webpay Oneclick Mall Diferido - Autorizar pago</h1>
+
+<p class="mb-32">
+  En este primer paso, procederemos a autorizar una transacción en la tarjeta que ha sido previamente inscrita.
+</p>
+
+<h2 id="request">Paso 1: Petición</h2>
+<p class="mb-32">
+  Ahora que contamos con el <strong>username</strong> y el <strong>tbk_user</strong> obtenidos durante la inscripción,
+  estamos listos para autorizar transacciones en la tarjeta inscrita.
+</p>
+
+{% filter highlight_code:"python" %}
+details = MallTransactionAuthorizeDetails(child_code_1, buy_order_child1, installments1, amount1) \
+        .add(child_code_2, buy_order_child2, installments2, amount2)
+resp = transaction.authorize(username, tbk_user, buy_order, details)
+{% endfilter %}
+
+<h2 id="response" class="mt-32">Paso 2: Respuesta</h2>
+<p class="mb-32">
+  Una vez que la transacción ha sido autorizada, Transbank proporcionará la siguiente información.
+  Es fundamental conservar esta respuesta y verificar que el campo <b>response_code</b> tenga un valor de cero
+  y que el campo <b>status</b> sea <b>"AUTHORIZED"</b>.
+</p>
+
+{{ response_data|prettyjson|highlight_code:"json" }}
+
+<h2 class="mt-32">¡Casi listo!</h2>
+<p class="mb-32">
+  Ya puedes mostrar al usuario una página de éxito de la transacción.
+  Debes tener en cuenta que la transacción aún no ha sido capturada, solo se ha retenido el saldo en la tarjeta del Tarjetahabiente.
+</p>
+
+{% for detail in response_data.details %}
+<form action="{% url 'oneclick_mall_deferred:capture' %}" method="get">
+  <input type="hidden" name="buy_order" value="{{ response_data.buy_order }}" />
+
+  <div class="tbk-card">
+    <div class="card-multi-field">
+      <div class="input-container">
+        <label class="tbk-label" for="child_commerce_code">Código de comercio (tienda hija):</label>
+        <input class="tbk-input-text" type="text" name="child_commerce_code" value="{{ detail.commerce_code }}" />
+      </div>
+      <div class="input-container">
+        <label class="tbk-label" for="child_buy_order">Orden de compra (tienda hija):</label>
+        <input class="tbk-input-text" type="text" name="child_buy_order" value="{{ detail.buy_order }}" />
+      </div>
+      <div class="input-container">
+        <label class="tbk-label" for="authorization_code">Código de autorización (tienda hija):</label>
+        <input class="tbk-input-text" type="text" name="authorization_code" value="{{ detail.authorization_code }}" />
+      </div>
+      <div class="input-container">
+        <label class="tbk-label" for="amount">Monto a capturar (tienda hija):</label>
+        <input class="tbk-input-text" type="text" name="amount" value="{{ detail.amount }}" />
+      </div>
+    </div>
+
+    <div class="tbk-card-footer">
+      <button type="submit" class="tbk-button primary">CAPTURAR</button>
+    </div>
+  </div>
+</form>
+{% endfor %}
+
+<a class="tbk-button primary mb-32" href="{% url 'oneclick_mall_deferred:status' %}?buy_order={{ response_data.buy_order  }}">
+  CONSULTAR ESTADO
+</a>
+
+{% endblock %}

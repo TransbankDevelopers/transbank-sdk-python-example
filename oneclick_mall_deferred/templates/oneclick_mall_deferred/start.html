@@ -29,38 +29,31 @@
 </ol>
 
 {% filter highlight_code:"python" %}
-from transbank.webpay.oneclick.mall_inscription import MallInscription
-from transbank.common.integration_commerce_codes import IntegrationCommerceCodes
-from transbank.common.integration_api_keys import IntegrationApiKeys
-
-inscription = MallInscription.build_for_integration(
-    IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED,
-    IntegrationApiKeys.WEBPAY
-)
+inscription = MallInscription.build_for_integration(commerce_code, api_key)
 resp = inscription.start(username, email, response_url)
 {% endfilter %}
 
-<h2 id="response">Paso 2: Respuesta</h2>
+<h2 id="response" class="mt-32">Paso 2: Respuesta</h2>
 <p class="mb-32">
   Una vez que hayas iniciado la inscripción, aquí encontrarás los datos de respuesta generados por el proceso.
 </p>
 
 {{ response_data|prettyjson|highlight_code:"json" }}
 
-<h2 id="form">Paso 3: Creación del formulario</h2>
+<h2 id="form" class="mt-32">Paso 3: Creación del formulario</h2>
 <p class="mb-32">
   Utiliza estos datos de respuesta para redireccionar al usuario al formulario de inscripción del Tarjetahabiente.
   Este formulario será la interfaz a través de la cual el usuario completará su inscripción.
 </p>
 
 {% filter highlight_code:"html" %}
-<form action="{{ response_data.url }}" method="POST">
+<form action="{{ response_data.url_webpay }}" method="POST">
   <input type="hidden" name="TBK_TOKEN" value="{{ response_data.token }}" />
   <input type="submit" value="Inscribir" />
 </form>
 {% endfilter %}
 
-<h2 id="example">Ejemplo</h2>
+<h2 id="example" class="mt-32">Ejemplo</h2>
 <p class="mb-32">
   Para llevar a cabo una inscripción en nuestro sistema, primero debemos crearla. Utilizaremos
   los siguientes datos para configurar la inscripción:
@@ -83,7 +76,7 @@ resp = inscription.start(username, email, response_url)
      class="tbk-link">documentación</a>.
 </span>
 
-<form action="{{ response_data.url }}" method="POST">
+<form action="{{ response_data.url_webpay }}" method="POST">
   <div class="tbk-card">
     <span class="tbk-card-title">Formulario de redirección</span>
     <label class="tbk-label" for="TBK_TOKEN">Token</label>

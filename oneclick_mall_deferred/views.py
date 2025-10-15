@@ -3,9 +3,9 @@ from django.shortcuts import render
 import secrets
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
-from django.views.decorators.csrf import csrf_exempt
 from transbank.webpay.oneclick.mall_inscription import MallInscription
 from transbank.webpay.oneclick.mall_transaction import MallTransaction
+from transbank.webpay.oneclick.request import MallTransactionAuthorizeDetails
 from transbank.common.integration_commerce_codes import IntegrationCommerceCodes
 from transbank.common.integration_api_keys import IntegrationApiKeys
 
@@ -54,22 +54,24 @@ def start(request):
 
 @require_GET
 def finish(request):
-    """Equivale al método Finish"""
     try:
         inscription = get_transbank_inscription()
         tbk_token = request.GET.get("TBK_TOKEN")
 
         resp = inscription.finish(tbk_token)
-
-        request.session["tbk_user"] = resp.tbk_user
+        request.session["tbk_user"] = resp["tbk_user"]
 
         context = {
+            "request_data": {
+                "username": request.session.get("username", ""),
+                "tbk_user": resp["tbk_user"]
+            },
             "username": request.session.get("username", ""),
-            "tbk_user": resp.tbk_user,
+            "tbk_user": resp["tbk_user"],
             "token": tbk_token,
             "response_data": resp,
-            "child_commerce_code_1": IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED_CHILD1,
-            "child_commerce_code_2": IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED_CHILD2,
+            "child_commerce_code1": IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED_CHILD1,
+            "child_commerce_code2": IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED_CHILD2,
         }
 
         return render(request, "oneclick_mall_deferred/finish.html", context)
@@ -80,9 +82,8 @@ def finish(request):
 
 @require_GET
 def delete(request):
-
     try:
-        inscription = get_transbank_transaction()
+        inscription = get_transbank_inscription()
         username = request.GET.get("username")
         tbk_user = request.GET.get("tbk_user")
 
@@ -96,7 +97,6 @@ def delete(request):
 
 @require_GET
 def authorize(request):
-
     try:
         transaction = get_transbank_transaction()
 
@@ -105,8 +105,8 @@ def authorize(request):
 
         child_code_1 = request.GET.get("child_commerce_code1")
         child_code_2 = request.GET.get("child_commerce_code2")
-        amount1 = float(request.GET.get("child_commerce_amount1", "0"))
-        amount2 = float(request.GET.get("child_commerce_amount2", "0"))
+        amount1 = int(request.GET.get("child_commerce_amount1", "0"))
+        amount2 = int(request.GET.get("child_commerce_amount2", "0"))
         installments1 = int(request.GET.get("child_commerce_installments1", "0"))
         installments2 = int(request.GET.get("child_commerce_installments2", "0"))
 
@@ -114,20 +114,8 @@ def authorize(request):
         buy_order_child1 = f"childBuyOrder1_{secrets.randbelow(1000)}"
         buy_order_child2 = f"childBuyOrder2_{secrets.randbelow(1000)}"
 
-        details = [
-            {
-                "commerce_code": child_code_1,
-                "buy_order": buy_order_child1,
-                "amount": amount1,
-                "installments": installments1,
-            },
-            {
-                "commerce_code": child_code_2,
-                "buy_order": buy_order_child2,
-                "amount": amount2,
-                "installments": installments2,
-            },
-        ]
+        details = MallTransactionAuthorizeDetails(child_code_1, buy_order_child1, installments1, amount1) \
+        .add(child_code_2, buy_order_child2, installments2, amount2)
 
         resp = transaction.authorize(username, tbk_user, buy_order, details)
 
@@ -140,7 +128,6 @@ def authorize(request):
 
 @require_GET
 def status(request):
-    """Equivale al método Status"""
     try:
         transaction = get_transbank_transaction()
         buy_order = request.GET.get("buy_order")
@@ -152,13 +139,12 @@ def status(request):
 
 @require_GET
 def refund(request):
-    """Equivale al método Refund"""
     try:
         transaction = get_transbank_transaction()
         buy_order = request.GET.get("buy_order")
         child_buy_order = request.GET.get("child_buy_order")
         child_commerce_code = request.GET.get("child_commerce_code")
-        amount = float(request.GET.get("amount", "0"))
+        amount = int(request.GET.get("amount", "0"))
 
         resp = transaction.refund(buy_order, child_commerce_code, child_buy_order, amount)
 
@@ -170,13 +156,12 @@ def refund(request):
 
 @require_GET
 def capture(request):
-    """Equivale al método Capture"""
     try:
         transaction = get_transbank_transaction()
         buy_order = request.GET.get("buy_order")
         child_buy_order = request.GET.get("child_buy_order")
         authorization_code = request.GET.get("authorization_code")
-        amount = float(request.GET.get("amount", "0"))
+        amount = int(request.GET.get("amount", "0"))
         child_commerce_code = request.GET.get("child_commerce_code")
 
         resp = transaction.capture(child_commerce_code, child_buy_order, authorization_code, amount)
@@ -192,4 +177,3 @@ def capture(request):
 
     except Exception as e:
         return render(request, ERROR_TEMPLATE, {"error": str(e)})
-
