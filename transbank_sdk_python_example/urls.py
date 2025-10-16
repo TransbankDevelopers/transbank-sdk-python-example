@@ -21,5 +21,7 @@ from core import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('webpay-plus/', include('webpay_plus.urls', namespace='webpay_plus')),
-    path('webpay-plus-deferred/', include('webpay_plus_deferred.urls', namespace='webpay_plus_deferred'))
+    path('webpay-plus-deferred/', include('webpay_plus_deferred.urls', namespace='webpay_plus_deferred')),
+    path('oneclick-mall/', include('oneclick_mall.urls', namespace='oneclick_mall'))
+
 ]
