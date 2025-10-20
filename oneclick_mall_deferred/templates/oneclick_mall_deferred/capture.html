@@ -39,11 +39,18 @@ response = transaction.capture(child_commerce_code, child_buy_order, authorizati
 
 {{ response_data|prettyjson|highlight_code:"json" }}
 
-<h2 id="operations" class="mt-32">Otras utilidades</h2>
+<h2 id="operations" class="mt-32">¡Transacción Capturada!</h2>
+<p>
+    Con la transacción capturada, puedes mostrar al usuario una página de éxito de la transacción, proporcionándole la confirmación de que el proceso se ha completado con éxito.
+</p>
+<p>
+    <strong>Otras Utilidades: </strong>Después de confirmar la transacción, considera las siguientes utilidades adicionales:
+</p>
+<p>
+    <strong>Reembolso: </strong> Evalúa la posibilidad de reversar o anular el pago según ciertas condiciones comerciales.
+</p>
 <p class="mb-32">
-    Luego de capturada la transacción puedes Reembolsar (reversar o anular) el pago dependiendo 
-    de ciertas condiciones comerciales (Reversa en las primeras 3 horas de la captura, anulación posterior a eso). 
-    También puedes consultar el estado de la transacción hasta 7 días después de realizada.
+    <strong>Consulta de Estado: </strong>Hasta 7 días después de la transacción, puedes consultar su estado para obtener más detalles.
 </p>
 
 <form action="{% url 'oneclick_mall_deferred:refund' %}" method="get">
