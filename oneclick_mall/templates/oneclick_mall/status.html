@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% load static highlight_code %}
+
+{% block title %}Webpay Oneclick Mall - Consultar estado de transacción{% endblock %}
+
+{% block content %}
+
+{% component "breadcrumbs" items=[
+    {"name": "Inicio", "url": "/"},
+    {"name": "Webpay Oneclick Mall", "url": "/oneclick-mall/"},
+    {"name": "Consultar estado de transacción", "url": "#"}
+] %}{% endcomponent %}
+
+<h1>Webpay Oneclick Mall - Consultar estado de transacción</h1>
+
+<p class="mb-32">
+  Puedes solicitar el estado de una transacción hasta <strong>7 días</strong> después de su realización.
+  No hay límite de solicitudes durante ese período.  
+  Sin embargo, una vez pasados los 7 días, ya no podrás revisar su estado.
+</p>
+
+<h2 id="request">Paso 1: Petición</h2>
+<p class="mb-32">
+  Para realizar la consulta, necesitarás el <strong>buy_order</strong> de la transacción de interés.
+  Utiliza este identificador para efectuar una llamada a <code>MallTransaction</code>.
+</p>
+
+{% filter highlight_code:"python" %}
+transaction = MallTransaction.build_for_integration(
+        IntegrationCommerceCodes.ONECLICK_MALL,
+        IntegrationApiKeys.WEBPAY
+    )
+resp = transaction.status(buy_order)
+{% endfilter %}
+
+<h2 id="response" class="mt-32">Paso 2: Respuesta</h2>
+<p class="mb-32">
+  Transbank responderá con la siguiente información.
+  Asegúrate de guardar esta respuesta, y recuerda que la validación principal es que el campo
+  <strong>response_code</strong> sea igual a <strong>0</strong>.
+</p>
+
+<div class="mb-32">
+{{ response_data|prettyjson|highlight_code:"json" }}
+</div>
+
+{% endblock %}

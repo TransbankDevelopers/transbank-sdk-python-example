@@ -45,13 +45,16 @@ APPEND_SLASH = False
 INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_components',
+    'django.contrib.sessions',
     'core.apps.CoreConfig',
     'webpay_plus.apps.WebpayPlusConfig',
     'webpay_plus_deferred.apps.WebpayPlusDeferredConfig',
+    'oneclick_mall.apps.OneclickMallConfig',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -83,6 +86,10 @@ WSGI_APPLICATION = 'transbank_sdk_python_example.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
+      'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 
