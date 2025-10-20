@@ -26,6 +26,10 @@
 </p>
 
 {% filter highlight_code:"python" %}
+transaction = MallTransaction.build_for_integration(
+        IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED,
+        IntegrationApiKeys.WEBPAY
+)
 resp = transaction.status(buy_order)
 {% endfilter %}
 

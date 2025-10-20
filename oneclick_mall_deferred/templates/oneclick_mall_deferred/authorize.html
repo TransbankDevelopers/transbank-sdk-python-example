@@ -24,8 +24,14 @@
 </p>
 
 {% filter highlight_code:"python" %}
-details = MallTransactionAuthorizeDetails(child_code_1, buy_order_child1, installments1, amount1) \
-        .add(child_code_2, buy_order_child2, installments2, amount2)
+transaction = MallTransaction.build_for_integration(
+        IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED,
+        IntegrationApiKeys.WEBPAY
+)
+details = (
+    MallTransactionAuthorizeDetails(child_code_1, buy_order_child1, installments1, amount1)
+    .add(child_code_2, buy_order_child2, installments2, amount2)
+)
 resp = transaction.authorize(username, tbk_user, buy_order, details)
 {% endfilter %}
 

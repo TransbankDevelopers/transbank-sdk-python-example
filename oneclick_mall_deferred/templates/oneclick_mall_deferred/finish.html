@@ -35,6 +35,10 @@
 </p>
 
 {% filter highlight_code:"python" %}
+inscription = MallInscription.build_for_integration(
+    IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED,
+    IntegrationApiKeys.WEBPAY
+)
 response = inscription.finish(token)
 {% endfilter %}
 

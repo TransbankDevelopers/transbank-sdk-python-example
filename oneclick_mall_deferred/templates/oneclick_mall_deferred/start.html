@@ -29,7 +29,10 @@
 </ol>
 
 {% filter highlight_code:"python" %}
-inscription = MallInscription.build_for_integration(commerce_code, api_key)
+inscription = MallInscription.build_for_integration(
+    IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED,
+    IntegrationApiKeys.WEBPAY
+)
 resp = inscription.start(username, email, response_url)
 {% endfilter %}
 

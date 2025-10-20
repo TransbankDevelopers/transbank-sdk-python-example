@@ -39,6 +39,10 @@
 </p>
 
 {% filter highlight_code:"python" %}
+transaction = MallTransaction.build_for_integration(
+        IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED,
+        IntegrationApiKeys.WEBPAY
+)
 resp = transaction.refund(buy_order, child_commerce_code, child_buy_order, amount)
 {% endfilter %}
 
