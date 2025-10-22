@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'webpay_plus.apps.WebpayPlusConfig',
     'webpay_plus_deferred.apps.WebpayPlusDeferredConfig',
-    'oneclick_mall_deferred.apps.OneclickMallDeferredConfig',
+    'oneclick_mall.apps.OneclickMallConfig',
+    'oneclick_mall_deferred.apps.OneclickMallDeferredConfig'
 ]
 
 MIDDLEWARE = [
