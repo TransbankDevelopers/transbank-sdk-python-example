@@ -1,0 +1,112 @@
+{% extends "layout.html" %}
+{% load static highlight_code %}
+
+{% block title %}Webpay Oneclick Mall Diferido - Finalizar inscripción{% endblock %}
+
+{% block content %}
+
+{% component "breadcrumbs" items=[
+    {"name": "Inicio", "url": "/"},
+    {"name": "Webpay Oneclick Mall Diferido", "url": "/oneclick-mall-diferido/"},
+    {"name": "Finalizar inscripción", "url": "#"}
+] %}{% endcomponent %}
+
+<h1>Webpay Oneclick Mall Diferido - Finalizar inscripción</h1>
+
+<p class="mb-32">
+  En esta fase completaremos el proceso de inscripción, permitiéndonos posteriormente realizar cargos
+  a la tarjeta que el Tarjetahabiente haya inscrito.
+</p>
+
+<h2 id="data">Paso 1: Datos recibidos</h2>
+<p class="mb-32">
+  Después de finalizar el flujo en el formulario de inscripción, recibirás un GET con la siguiente información:
+</p>
+
+{% filter highlight_code:"json" %}
+{
+  "TBK_TOKEN": "{{ token }}"
+}
+{% endfilter %}
+
+<h2 id="request" class="mt-32">Paso 2: Petición de autorización</h2>
+<p class="mb-32">
+  Utiliza el token recibido para finalizar la inscripción mediante una nueva llamada a Oneclick.
+</p>
+
+{% filter highlight_code:"python" %}
+inscription = MallInscription.build_for_integration(
+    IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED,
+    IntegrationApiKeys.WEBPAY
+)
+response = inscription.finish(token)
+{% endfilter %}
+
+<h2 id="response" class="mt-32">Paso 3: Respuesta</h2>
+<p class="mb-32">
+  Transbank responderá con información crucial. Guarda estos detalles, ya que serán necesarios para
+  autorizar transacciones futuras.
+</p>
+
+{{ response_data|prettyjson|highlight_code:"json" }}
+
+<h2 id="authorize" class="mt-32">¡La tarjeta ya está inscrita!</h2>
+<p class="mb-32">
+  Con la inscripción exitosa se pueden autorizar transacciones.
+</p>
+
+<h2>Autorizar una transacción</h2>
+<p class="mb-32">
+  Asegúrate de guardar los datos de la respuesta obtenidos durante la inscripción. Estos serán esenciales para
+  llevar a cabo transacciones de manera efectiva.
+</p>
+
+<div class="mb-32">
+  {% component "data_table" data=request_data %}{% endcomponent %}
+</div>
+
+<p class="mt-32">
+  Después de una inscripción exitosa, tienes dos opciones: autorizar un pago o borrar al usuario que se acaba de inscribir.
+</p>
+
+<form action="{% url 'oneclick_mall_deferred:authorize' %}" method="get">
+  <input type="hidden" name="username" value="{{ username }}" />
+  <input type="hidden" name="tbk_user" value="{{ tbk_user }}" />
+  <input type="hidden" name="child_commerce_code1" value="{{ child_commerce_code1 }}" />
+  <input type="hidden" name="child_commerce_code2" value="{{ child_commerce_code2 }}" />
+
+  <div class="tbk-card">
+    <p class="mb-16">Tienda 1</p>
+    <div class="card-multi-field">
+      <div class="input-container">
+        <label class="tbk-label" for="child_commerce_amount1">Monto:</label>
+        <input type="number" name="child_commerce_amount1" class="tbk-input-text" value="10000" />
+      </div>
+      <div class="input-container">
+        <label class="tbk-label" for="child_commerce_installments1">Cuotas:</label>
+        <input type="number" name="child_commerce_installments1" class="tbk-input-text" value="0" />
+      </div>
+    </div>
+
+    <p class="mb-16 mt-32">Tienda 2</p>
+    <div class="card-multi-field">
+      <div class="input-container">
+        <label class="tbk-label" for="child_commerce_amount2">Monto:</label>
+        <input type="number" name="child_commerce_amount2" class="tbk-input-text" value="5000" />
+      </div>
+      <div class="input-container">
+        <label class="tbk-label" for="child_commerce_installments2">Cuotas:</label>
+        <input type="number" name="child_commerce_installments2" class="tbk-input-text" value="0" />
+      </div>
+    </div>
+
+    <div class="tbk-card-footer">
+      <button class="tbk-button primary" type="submit">AUTORIZAR</button>
+    </div>
+  </div>
+</form>
+
+<a href="{% url 'oneclick_mall_deferred:delete' %}?tbk_user={{ tbk_user }}&username={{ username }}"
+   class="tbk-button primary mt-16 mb-32">BORRAR USUARIO</a>
+
+{% endblock %}

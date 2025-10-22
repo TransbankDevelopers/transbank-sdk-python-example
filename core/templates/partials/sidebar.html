@@ -44,11 +44,11 @@
             </ul>
             <hr class="sidebar-divider" />
         </div>
-        <div>
+        <div>   
             <p class="tbk-sidebar-item-title">Webpay Oneclick</p>
             <ul>
                 <li style="margin-bottom:20px;">
-                    <button class="sidebar-collapsible-title">
+                    <button class="sidebar-collapsible-title" data-collapsible="oneclick-mall">
                         <span class="general-text">Oneclick Mall</span>
                         <img src="{% static 'images/t-arrow.svg' %}" class="arrow" alt="t-arrow" width="24"
                             height="24" />
@@ -59,7 +59,20 @@
                                 Flujo Completo
                             </a>
                         </li>
-                        
+                    </ul>
+                </li>
+                <li style="margin-bottom:20px;">
+                    <button class="sidebar-collapsible-title" data-collapsible="oneclick-mall-deferred">
+                        <span class="general-text">Oneclick Mall Diferido</span>
+                        <img src="{% static 'images/t-arrow.svg' %}" class="arrow" alt="t-arrow" width="24"
+                            height="24" />
+                    </button>
+                    <ul class="collapsible-content" id="collapse-oneclick-mall-deferred">
+                        <li class="collapsible-items">
+                            <a href="{% url 'oneclick_mall_deferred:start' %}" class="tbk-sidebar-item">
+                                Flujo Completo
+                            </a>
+                        </li>
                     </ul>
                 </li>
             </ul>
