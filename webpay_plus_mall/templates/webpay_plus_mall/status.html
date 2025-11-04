@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% load static highlight_code %}
+
+{% block title %}Webpay Plus Mall - Consultar estado de transacción{% endblock %}
+
+{% block content %}
+
+{% component "breadcrumbs" items=[
+    {"name": "Inicio", "url": "/"},
+    {"name": "Webpay Plus Mall", "url": "/webpay-plus-mall/"},
+    {"name": "Consultar estado de transacción", "url": "/webpay-plus-mall/status"}
+] %}{% endcomponent %}
+
+<h1>Webpay Plus Mall - Consultar estado de transacción</h1>
+
+<p class="mb-32">
+    Puedes solicitar el estado de una transacción hasta 7 días después de su realización. No hay
+    límite de solicitudes de este tipo durante ese período. Sin embargo, una vez pasados los 7 días, ya no podrás revisar
+    su estado.
+</p>
+
+<h2 id="request">Paso 1 - Petición:</h2>
+<p class="mb-32">
+    Para realizar la consulta, necesitas el token de la transacción de la cual deseas obtener el estado. Utiliza
+    este token para realizar una llamada al SDK.
+</p>
+
+{% filter highlight_code:"python" %}
+tx = MallTransaction.build_for_integration(
+        IntegrationCommerceCodes.WEBPAY_PLUS_MALL,
+        IntegrationApiKeys.WEBPAY
+    )
+resp = tx.status(token)
+{% endfilter %}
+
+<h2 class="mt-32" id="response">Paso 2: Respuesta</h2>
+<p class="mb-32">
+    Una vez que hayas creado la transacción, aquí encontrarás los datos de respuesta generados por el proceso.
+</p>
+
+<div class="mb-32">
+  {{ response_data|prettyjson|highlight_code:"json" }}
+</div>
+
+{% endblock %}

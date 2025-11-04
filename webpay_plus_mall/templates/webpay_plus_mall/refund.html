@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+{% load static highlight_code %}
+
+{% block title %}Webpay Plus Mall - Reembolsar{% endblock %}
+
+{% block content %}
+
+{% component "breadcrumbs" items=[
+    {"name": "Inicio", "url": "/"},
+    {"name": "Webpay Plus Mall", "url": "/webpay-plus-mall/"},
+    {"name": "Reembolsar", "url": "/webpay-plus-mall/refund"}
+] %}{% endcomponent %}
+
+<h1>Webpay Plus Mall - Reembolsar</h1>
+
+<p class="mb-32">
+    En esta etapa, tienes la opción de solicitar el reembolso del monto al titular de la tarjeta. Dependiendo del monto y el tiempo transcurrido desde la transacción, este proceso podría resultar en una Reversa o Anulación, dependiendo de ciertas condiciones (Reversa en las primeras 3 horas de la autorización, anulación posterior a eso), o una Anulación parcial si el monto es menor al total. Las anulaciones parciales para tarjetas débito y prepago no están soportadas.
+</p>
+
+<h2 id="request">Paso 1 - Petición:</h2>
+<p class="mb-32">
+    Para llevar a cabo el reembolso, necesitas proporcionar el token de la transacción y el monto que deseas reversar.
+    Si anulas el monto total, podría ser una Reversa o Anulación, dependiendo de ciertas condiciones
+    (Reversa en las primeras 3 horas de la autorización, anulación posterior a eso), o una Anulación Parcial si el monto es menor al total.
+</p>
+
+<p class="mb-16">
+    Algunas consideraciones a tener en cuenta:
+</p>
+<ul class="bullet-list mb-32">
+    <li>No es posible realizar Anulaciones Parciales en pagos con cuotas.</li>
+</ul>
+
+<p class="mb-32">
+    En <a href="https://www.transbankdevelopers.cl/producto/webpay#anulaciones-y-reversas" target="_blank" class="tbk-link">este
+        link
+    </a> podrás ver mayor información sobre las condiciones y casos para anular o reversar transacciones.
+</p>
+
+<div class="mb-32">
+  {% filter highlight_code:"python" %}
+  tx = MallTransaction.build_for_integration(
+        IntegrationCommerceCodes.WEBPAY_PLUS_MALL,
+        IntegrationApiKeys.WEBPAY
+    )
+  resp = tx.refund(token, buy_order, commerce_code, amount)
+  {% endfilter %}
+</div>
+
+
+<h2 class="mt-32" id="response">Paso 2: Respuesta</h2>
+<p class="mb-32">
+    Transbank responderá con el resultado del proceso de reembolso, indicando si se ha realizado una
+    Reversa, Anulación o Anulación Parcial.
+</p>
+<div class="mb-32">
+  {{ response_data|prettyjson|highlight_code:"json" }}
+</div>
+
+<a href="{% url 'webpay_plus_mall:status' %}?token={{ token }}" class="tbk-button primary mb-32">CONSULTAR ESTADO</a>
+
+{% endblock %}

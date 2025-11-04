@@ -1,0 +1,112 @@
+{% extends "layout.html" %}
+{% load static highlight_code %}
+
+{% block title %}Webpay Plus Mall - Creación de Transacción{% endblock %}
+
+{% block content %}
+
+{% component "breadcrumbs" items=[
+    {"name": "Inicio", "url": "/"},
+    {"name": "Webpay Plus Mall", "url": "/webpay-plus-mall/"}
+] %}{% endcomponent %}
+
+<h1>Webpay Plus Mall - Creación de Transacción</h1>
+
+<p class="mb-32">
+    Webpay Plus Mall te permite realizar transacciones con múltiples tiendas hijas en una sola operación.
+    Ideal para marketplaces o centros comerciales virtuales.
+</p>
+
+<p class="mb-32">
+    Todas las transacciones en este proyecto de ejemplo son realizadas en
+    ambiente de integración.
+</p>
+
+<h2 id="request">Paso 1: Petición</h2>
+<ol class="bullet-list mb-32">
+    <li>Comienza por importar la librería <strong>Webpay Plus Mall</strong> en tu proyecto.</li>
+    <li>Luego, inicia una transacción utilizando las funciones proporcionadas mediante el SDK.</li>
+</ol>
+<div class="mb-32">
+  {% filter highlight_code:"python" %}
+  from transbank.webpay.webpay_plus.mall_transaction import MallTransaction
+  from transbank.webpay.webpay_plus.request import MallTransactionCreateDetails
+  from transbank.common.integration_commerce_codes import IntegrationCommerceCodes
+  from transbank.common.integration_api_keys import IntegrationApiKeys
+  
+  tx = MallTransaction.build_for_integration(
+      IntegrationCommerceCodes.WEBPAY_PLUS_MALL,
+      IntegrationApiKeys.WEBPAY
+  )
+  
+  details = MallTransactionCreateDetails(
+      commerce_code_child1, buy_order_child1, amount_child1
+  ).add(
+      commerce_code_child2, buy_order_child2, amount_child2
+  )
+  
+  resp = tx.create(buy_order, session_id, return_url, details)
+  {% endfilter %}
+</div>
+
+<h2 id="response">Paso 2: Respuesta</h2>
+<p class="mb-32">
+    Una vez que hayas iniciado la transacción, aquí encontrarás los datos de respuesta generados por el proceso.
+</p>
+
+<div class="mb-32">
+  {{ response_data|prettyjson|highlight_code:"json" }}
+</div>
+
+<h2 id="form">Paso 3: Creación del formulario</h2>
+<p class="mb-32">
+    Utiliza estos datos de respuesta para redireccionar al usuario al formulario de pago de Webpay.
+</p>
+
+<div class="mb-32">
+  {% filter highlight_code:"html" %}
+<form action="{{ response_data.url }}" method="POST">
+    <input type="hidden" name="token_ws" value="{{ response_data.token }}" />
+    <input type="submit" value="Pagar" />
+</form>
+  {% endfilter %}
+</div>
+
+<h2 id="example">Ejemplo</h2>
+<p class="mb-32">
+    Para llevar a cabo una transacción mall, primero debemos crearla. Utilizaremos
+    los siguientes datos para configurar la transacción:
+</p>
+
+<div class="mb-32">
+    {% component "data_table" data=request %}{% endcomponent %}
+</div>
+
+<h3>Detalles de las tiendas hijas:</h3>
+<div class="mb-32">
+    {% component "data_table" data=details %}{% endcomponent %}
+</div>
+
+<p class="mb-32">
+    Por último, con la respuesta del servicio que confirma la creación de la transacción, procedemos a crear el formulario de pago. Para fines de este ejemplo, haremos visible el campo "token_ws", el cual es esencial para completar el proceso de pago de manera exitosa.
+</p>
+
+<span>
+    Antes de continuar al formulario de Webpay, asegúrate de contar con los datos de las tarjetas de prueba que están en la
+    <a href="https://transbankdevelopers.cl/documentacion/como_empezar#tarjetas-de-prueba"
+       target="_blank"
+       class="tbk-link">documentación</a>.
+</span>
+
+<form action="{{ response_data.url }}" method="POST">
+    <div class="tbk-card">
+        <span class="tbk-card-title">Formulario de redirección</span>
+        <label class="tbk-label" for="token_ws">Token</label>
+        <input type="text" name="token_ws" class="tbk-input-text" value="{{ response_data.token }}" />
+        <div class="tbk-card-footer">
+            <button class="tbk-button primary">PAGAR</button>
+        </div>
+    </div>
+</form>
+
+{% endblock %}
