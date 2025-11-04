@@ -269,6 +269,9 @@ code {
   margin-bottom: 16px;
 }
 
+.mb-20 {
+  margin-bottom: 20px;
+}
 .tbk-link {
   color: var(--tbk-red);
   text-decoration: none;
