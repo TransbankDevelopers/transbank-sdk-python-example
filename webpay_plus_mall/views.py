@@ -28,11 +28,6 @@ def create(request):
 
     try:
         tx = get_transbank_transaction()
-        
-        # Crear los detalles de las tiendas hijas
-        print("---------------------------")
-        print(f"code1: {IntegrationCommerceCodes.WEBPAY_PLUS_MALL_CHILD1}")
-        print(f"code2: {IntegrationCommerceCodes.WEBPAY_PLUS_MALL_CHILD2}")
 
         details = MallTransactionCreateDetails(
             1000,
@@ -44,9 +39,6 @@ def create(request):
             IntegrationCommerceCodes.WEBPAY_PLUS_MALL_CHILD2,
             f"childBuyOrder2_{secrets.randbelow(1000)}"
         )
-        print("---------------------------")
-        print(f"code1 detail: {details.details[0].commerce_code}")
-        print(f"code2 detail: {details.details[1].commerce_code}")
         create_tx = {
             'buy_order': "O-" + str(secrets.randbelow(10000) + 1),
             'session_id': "S-" + str(secrets.randbelow(10000) + 1),
@@ -54,9 +46,7 @@ def create(request):
         }
         
         resp = tx.create(create_tx["buy_order"], create_tx["session_id"], create_tx["return_url"], details)
-        print("---------------------------")
-        print(f"code3: {IntegrationCommerceCodes.WEBPAY_PLUS_MALL_CHILD1}")
-        print(f"code4: {IntegrationCommerceCodes.WEBPAY_PLUS_MALL_CHILD2}")
+
         context = {
             "active_link": "Webpay Plus Mall",
             "navigation": navigation,
@@ -86,13 +76,6 @@ def create(request):
 def commit(request):
     tx = get_transbank_transaction()
     try:
-        # Debug: imprimir todos los datos recibidos
-        print(f"Method: {request.method}")
-        if request.method == "POST":
-            print(f"POST data: {dict(request.POST)}")
-        else:
-            print(f"GET data: {dict(request.GET)}")
-        
         view = "error_pages/timeout.html"
         data = {"request": request, "product": "Webpay Plus Mall"}
         tbk_token = request.GET.get("TBK_TOKEN") or request.POST.get("TBK_TOKEN")
