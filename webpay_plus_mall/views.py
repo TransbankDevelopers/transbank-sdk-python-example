@@ -43,6 +43,18 @@ def create(request):
             'buy_order': "O-" + str(secrets.randbelow(10000) + 1),
             'session_id': "S-" + str(secrets.randbelow(10000) + 1),
             'return_url': request.build_absolute_uri("/webpay-plus-mall/commit"),
+            'details': [
+                {
+                    'amount': 1000,
+                    'commerce_code': IntegrationCommerceCodes.WEBPAY_PLUS_MALL_CHILD1,
+                    'buy_order': details.details[0].buy_order
+                },
+                {
+                    'amount': 2000,
+                    'commerce_code': IntegrationCommerceCodes.WEBPAY_PLUS_MALL_CHILD2,
+                    'buy_order': details.details[1].buy_order
+                }
+            ],
         }
         
         resp = tx.create(create_tx["buy_order"], create_tx["session_id"], create_tx["return_url"], details)
@@ -51,18 +63,6 @@ def create(request):
             "active_link": "Webpay Plus Mall",
             "navigation": navigation,
             "request": create_tx,
-            "details": [
-                {
-                    "amount": 1000,
-                    "commerce_code": IntegrationCommerceCodes.WEBPAY_PLUS_MALL_CHILD1,
-                    "buy_order": details.details[0].buy_order
-                },
-                {
-                    "amount": 2000,
-                    "commerce_code": IntegrationCommerceCodes.WEBPAY_PLUS_MALL_CHILD2,
-                    "buy_order": details.details[1].buy_order
-                }
-            ],
             'response_data': resp
         }
       

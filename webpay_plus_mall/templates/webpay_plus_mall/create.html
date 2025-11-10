@@ -39,13 +39,11 @@
       IntegrationApiKeys.WEBPAY
   )
   
-  details = MallTransactionCreateDetails(
-      commerce_code_child1, buy_order_child1, amount_child1
-  ).add(
-      commerce_code_child2, buy_order_child2, amount_child2
-  )
-  
-  resp = tx.create(buy_order, session_id, return_url, details)
+details = MallTransactionCreateDetails(
+    amount_child1, commerce_code_child1, buy_order_child1
+).add(
+    amount_child2, commerce_code_child2, buy_order_child2
+)  resp = tx.create(buy_order, session_id, return_url, details)
   {% endfilter %}
 </div>
 
@@ -80,11 +78,6 @@
 
 <div class="mb-32">
     {% component "data_table" data=request %}{% endcomponent %}
-</div>
-
-<h3>Detalles de las tiendas hijas:</h3>
-<div class="mb-32">
-    {% component "data_table" data=details %}{% endcomponent %}
 </div>
 
 <p class="mb-32">
