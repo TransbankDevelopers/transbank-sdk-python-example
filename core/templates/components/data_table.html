@@ -3,19 +3,18 @@
   <div class="table-column tbk-head">Valor</div>
 
   {% for campo, valor in data.items %}
-    <div class="table-column">{{ campo }}</div>
-    <div class="table-column">
-      {% if campo == "details" and valor.0 %}
-        {% for detail in valor %}
-          <div class="details-item">
-            {% for key, val in detail.items %}
-              <div><strong>{{ key }}</strong>: {{ val }}</div>
-            {% endfor %}
-          </div>
-        {% endfor %}
-      {% else %}
-        {{ valor }}
-      {% endif %}
-    </div>
+    {% if campo == "details" and valor.0 %}
+      {% for detail in valor %}
+        <div class="table-column">details[{{ forloop.counter0 }}]</div>
+        <div class="table-column">
+          {% for key, val in detail.items %}
+            <p>{{ key }}: {{ val }}{% if not forloop.last %}, {% endif %}</p>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="table-column">{{ campo }}</div>
+      <div class="table-column">{{ valor }}</div>
+    {% endif %}
   {% endfor %}
 </div>
