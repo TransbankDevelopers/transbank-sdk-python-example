@@ -39,6 +39,11 @@
 
 <div class="mb-32">
   {% filter highlight_code:"python" %}
+  tx = MallTransaction.build_for_integration(
+        IntegrationCommerceCodes.WEBPAY_PLUS_MALL_DEFERRED,
+        IntegrationApiKeys.WEBPAY
+    )
+    
   resp = tx.commit(token_ws)
   {% endfilter %}
 </div>
