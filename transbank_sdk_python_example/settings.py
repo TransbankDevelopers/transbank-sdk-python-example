@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'webpay_plus.apps.WebpayPlusConfig',
     'webpay_plus_deferred.apps.WebpayPlusDeferredConfig',
     'webpay_plus_mall.apps.WebpayPlusMallConfig',
+    'webpay_plus_mall_deferred.apps.WebpayPlusMallDeferredConfig',
     'oneclick_mall.apps.OneclickMallConfig',
     'oneclick_mall_deferred.apps.OneclickMallDeferredConfig'
 ]

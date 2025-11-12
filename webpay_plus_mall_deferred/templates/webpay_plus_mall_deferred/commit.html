@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+{% load static highlight_code %}
+
+{% block title %}Webpay Plus Mall Diferido - Confirmar transacción{% endblock %}
+
+{% block content %}
+
+{% component "breadcrumbs" items=[
+    {"name": "Inicio", "url": "/"},
+    {"name": "Webpay Plus Mall Diferido", "url": "/webpay-plus-mall-deferred/"},
+    {"name": "Confirmar transacción", "url": "/webpay-plus-mall-deferred/commit"}
+] %}{% endcomponent %}
+
+<h1>Webpay Plus Mall Diferido - Confirmar transacción</h1>
+
+<p class="mb-32">
+    En este paso es importante confirmar la transacción para notificar a Transbank que hemos recibido
+    exitosamente los detalles de la transacción. <b>Es importante destacar que si la confirmación no se realiza, la
+        transacción será caducada.</b>
+</p>
+
+<h2 id="data">Paso 1 - Datos recibidos:</h2>
+<ul class="mb-32">
+    <p class="m-32">
+        Después de completar el flujo en el formulario de pago, recibirás un GET con la siguiente información:
+    </p>
+</ul>
+
+<div class="mb-32">
+  {% filter highlight_code:"json" %}
+  {"token_ws": "{{ token }}"}
+  {% endfilter %}
+</div>
+
+<h2 id="request">Paso 2 - Petición:</h2>
+<p class="mb-32">
+    Utilizarás el token recibido para confirmar la transacción mediante el SDK.
+</p>
+
+<div class="mb-32">
+  {% filter highlight_code:"python" %}
+  tx = MallTransaction.build_for_integration(
+        IntegrationCommerceCodes.WEBPAY_PLUS_MALL_DEFERRED,
+        IntegrationApiKeys.WEBPAY
+    )
+    
+  resp = tx.commit(token_ws)
+  {% endfilter %}
+</div>
+
+<h2 id="response">Paso 3 - Respuesta:</h2>
+<p class="mb-32">
+    Una vez que la transacción ha sido confirmada, Transbank proporcionará la siguiente información.
+    Es fundamental conservar esta respuesta y verificar que el campo "response_code" tenga un valor de cero y que el
+    campo "status" sea "AUTHORIZED".
+</p>
+
+<div class="mb-32">
+  {{ response_data|prettyjson|highlight_code:"json" }}
+</div>
+
+{% if response_data.details %}
+    {% for detail in response_data.details %}
+        <form action="{% url 'webpay_plus_mall_deferred:capture' %}" method="GET">
+            <input type="hidden" name="token" value="{{ token }}">
+            <input type="hidden" name="commerce_code" value="{{ detail.commerce_code }}">
+            <input type="hidden" name="buy_order" value="{{ detail.buy_order }}">
+            <input type="hidden" name="authorization_code" value="{{ detail.authorization_code }}">
+            
+            <div class="tbk-card mb-32">
+                <div class="tbk-button-container">
+                    <p class="mb-32">Capturar la transacción {{ forloop.counter }} para realmente capturar el dinero que había sido previamente reservado.</p>
+                </div>
+                <div class="tbk-capture-section">
+                    <div class="input-container">
+                        <label class="tbk-label" for="amount_{{ forloop.counter }}">Monto a capturar:</label>
+                        <input type="text" name="amount" id="amount_{{ forloop.counter }}" class="tbk-input-text" value="{{ detail.amount }}">
+                    </div>
+                    <div class="tbk-button-container">
+                        <button class="tbk-button primary">CAPTURAR</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    {% endfor %}
+{% endif %}
+
+<a href="{% url 'webpay_plus_mall_deferred:status' %}?token={{ token }}" class="tbk-button primary mb-32">CONSULTAR ESTADO</a>
+
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+{% load static highlight_code %}
+
+{% block title %}Webpay Plus Mall Diferido - Capturar{% endblock %}
+
+{% block content %}
+
+{% component "breadcrumbs" items=[
+    {"name": "Inicio", "url": "/"},
+    {"name": "Webpay Plus Mall Diferido", "url": "/webpay-plus-mall-deferred/"},
+    {"name": "Capturar", "url": "/webpay-plus-mall-deferred/capture"}
+] %}{% endcomponent %}
+
+<h1>Webpay Plus Mall Diferido - Capturar transacción diferida</h1>
+
+<p class="mb-32">
+    En este paso debemos capturar la transacción para realmente capturar el dinero que había sido previamente
+    reservado al hacer la transacción.
+</p>
+
+<h2 id="request">Paso 1: Petición</h2>
+<p class="mb-32">
+    Para capturar una transacción necesitaremos el Codigo de comercio, Token, Orden de compra, Código de autorización y monto a
+    capturar. Se hace de la siguiente manera.
+</p>
+
+<div class="mb-32">
+  {% filter highlight_code:"python" %}
+  tx = MallTransaction.build_for_integration(
+        IntegrationCommerceCodes.WEBPAY_PLUS_MALL_DEFERRED,
+        IntegrationApiKeys.WEBPAY
+    )
+  resp = tx.capture(commerce_code, token, buy_order, authorization_code, amount)
+  {% endfilter %}
+</div>
+
+<h2 id="response">Paso 2: Respuesta</h2>
+<p class="mb-32">
+    Transbank contestará con lo siguiente. Debes guardar esta información, lo único que debes validar
+    es que response_code sea igual a cero.
+</p>
+
+<div class="mb-32">
+  {{ response_data|prettyjson|highlight_code:"json" }}
+</div>
+
+<h2 id="operations">Otras utilidades</h2>
+<p class="mb-32">
+    Luego de capturada la transacción puedes Reembolsar (reversar o anular) el pago dependiendo 
+    de ciertas condiciones comerciales (Reversa en las primeras 3 horas de la captura, anulación posterior a eso). 
+    También puedes consultar el estado de la transacción hasta 7 días después de realizada.
+</p>
+
+<form action="{% url 'webpay_plus_mall_deferred:refund' %}" method="GET">
+    <input type="hidden" name="token" value="{{ token }}">
+    <input type="hidden" name="commerce_code" value="{{ commerce_code }}">
+    <input type="hidden" name="buy_order" value="{{ buy_order }}">
+    
+    <div class="tbk-refund-card mb-32">
+        <div class="input-container">
+            <label class="tbk-label" for="amount">Monto a reembolsar:</label>
+            <input type="text" name="amount" class="tbk-input-text" value="{{ response_data.captured_amount }}">
+        </div>
+        <div class="tbk-refund-button-container">
+            <button class="tbk-button primary">REEMBOLSAR</button>
+            <a href="{% url 'webpay_plus_mall_deferred:status' %}?token={{ token }}" class="tbk-button primary">CONSULTAR ESTADO</a>
+        </div>
+    </div>
+</form>
+
+{% endblock %}
