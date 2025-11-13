@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+{% load static highlight_code %}
+
+{% block title %}Webpay Oneclick Mall Diferido - Reembolsar{% endblock %}
+
+{% block content %}
+
+{% component "breadcrumbs" items=[
+    {"name": "Inicio", "url": "/"},
+    {"name": "Webpay Oneclick Mall Diferido", "url": "/oneclick-mall-diferido/"},
+    {"name": "Reembolsar", "url": "#"}
+] %}{% endcomponent %}
+
+<h1>Webpay Oneclick Mall Diferido - Reembolsar</h1>
+
+<p class="mb-32">
+  En esta etapa, tienes la opción de solicitar el reembolso del monto al titular de la tarjeta. Dependiendo del monto y el tiempo transcurrido desde la autorización, este proceso podría resultar en una Reversa o Anulación, dependiendo de ciertas condiciones (Reversa en las primeras 3 horas de la autorización, anulación posterior a eso), o una Anulación parcial si el monto es menor al total. Las anulaciones parciales para tarjetas débito y prepago no están soportadas.
+</p>
+
+<h2 id="request">Paso 1 - Petición:</h2>
+<p class="mb-32">
+  Para llevar a cabo el reembolso, necesitas proporcionar la orden de compra de la transacción, código de comercio de la tienda, Orden de compra del detalle de la transacción y el Monto que deseas reversar. Si anulas el monto total, podría ser una Reversa o Anulación, dependiendo de ciertas condiciones (Reversa en las primeras 3 horas de la autorización, anulación posterior a eso), o una Anulación Parcial si el monto es menor al total.
+</p>
+
+<p class="mb-16">
+    Algunas consideraciones a tener en cuenta:
+</p>
+<ul class="bullet-list mb-32">
+  <li>No es posible realizar Anulaciones Parciales en pagos con cuotas.</li>
+</ul>
+
+<p class="mb-32">
+  En
+  <a href="https://www.transbankdevelopers.cl/producto/webpay#anulaciones-y-reversas"
+     class="tbk-link" target="_blank" rel="noopener noreferrer">
+    este link
+  </a>
+  podrás ver mayor información sobre las condiciones y casos para anular o reversar transacciones.
+</p>
+
+{% filter highlight_code:"python" %}
+transaction = MallTransaction.build_for_integration(
+        IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED,
+        IntegrationApiKeys.WEBPAY
+)
+resp = transaction.refund(buy_order, child_commerce_code, child_buy_order, amount)
+{% endfilter %}
+
+<h2 id="response" class="mt-32">Paso 2: Respuesta</h2>
+<p class="mb-32">
+  Transbank responderá con el resultado del proceso de reembolso, indicando si se ha realizado una
+  <strong>Reversa</strong>, <strong>Anulación</strong> o <strong>Anulación Parcial</strong>.
+</p>
+
+{{ response_data|prettyjson|highlight_code:"json" }}
+
+<a href="{% url 'oneclick_mall_deferred:status' %}?buy_order={{ buy_order }}" class="tbk-button primary mb-32 mt-32">
+  CONSULTAR ESTADO
+</a>
+
+{% endblock %}
