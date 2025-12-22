@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% load static highlight_code %}
+{% block title %}Error{% endblock %}
+
+{% block content %}
+  <h1 id="cancel">{{ product }} - Rechazo Bancario</h1>
+  <p class="mb-32">
+   En esta fase, pueden surgir inconvenientes, ya sea con el titular de la tarjeta o a nivel bancario, lo que resulta en el estado final de la transacción siendo marcado como "FAILED".
+
+  <h2 class="mb-32">Datos recibidos:</h2>
+  
+  {{ response_data|prettyjson|highlight_code:"json" }}
+
+  <div class="mb-32"></div>
+  
+  
+{% endblock %}
