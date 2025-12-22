@@ -52,14 +52,26 @@ def start(request):
 
 @require_GET
 def finish(request):
+    inscription = get_transbank_inscription()
     try:
-        inscription = get_transbank_inscription()
+        view = "error_pages/general_error.html"
+        data = {"request": request, "product": "Oneclick Mall"}
         tbk_token = request.GET.get("TBK_TOKEN")
+        tbk_orden_compra = request.GET.get("TBK_ORDEN_COMPRA")
+ 
+        if tbk_orden_compra:
+            return render(request, "error_pages/aborted_oneclick.html", data)
 
         resp = inscription.finish(tbk_token)
-        request.session["tbk_user"] = resp["tbk_user"]
-
-        context = {
+        request.session["tbk_user"] = resp.get("tbk_user")
+        
+        if resp.get("response_code") == -1:
+            view = "error_pages/rejected.html"
+            data["response_data"] = resp
+        else:
+            resp = inscription.finish(tbk_token)
+            view = "oneclick_mall/finish.html"
+            data = {
             "request_data": {
                 "username": request.session.get("username", ""),
                 "tbk_user": resp["tbk_user"]
@@ -72,7 +84,7 @@ def finish(request):
             "child_commerce_code2": IntegrationCommerceCodes.ONECLICK_MALL_CHILD2,
         }
 
-        return render(request, "oneclick_mall/finish.html", context)
+        return render(request, view, data)
 
     except Exception as e:
         return render(request, ERROR_TEMPLATE, {"error": str(e)})
