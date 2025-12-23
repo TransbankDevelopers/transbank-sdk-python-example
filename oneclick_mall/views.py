@@ -53,8 +53,8 @@ def start(request):
 
 @require_GET
 def finish(request):
-    inscription = get_transbank_inscription()
     try:
+        inscription = get_transbank_inscription()
         view = "error_pages/general_error.html"
         data = {"request": request, "product": "Oneclick Mall"}
         tbk_token = request.GET.get("TBK_TOKEN")
@@ -66,7 +66,11 @@ def finish(request):
         resp = inscription.finish(tbk_token)
         request.session["tbk_user"] = resp.get("tbk_user")
         
-        if resp.get("response_code") == APROVED_CODE:
+        if resp.get("response_code") != APROVED_CODE:
+            view = "error_pages/rejected.html"
+            data["response_data"] = resp
+            
+        else:
             view = "oneclick_mall/finish.html"
             data = {
             "request_data": {
@@ -81,9 +85,6 @@ def finish(request):
             "child_commerce_code2": IntegrationCommerceCodes.ONECLICK_MALL_CHILD2,
             }
             
-        else:
-            view = "error_pages/rejected.html"
-            data["response_data"] = resp
 
         return render(request, view, data)
 

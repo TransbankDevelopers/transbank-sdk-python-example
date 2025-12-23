@@ -68,7 +68,11 @@ def finish(request):
         resp = inscription.finish(tbk_token)
         request.session["tbk_user"] = resp.get("tbk_user")
 
-        if resp.get("response_code") == APROVED_CODE:
+        if resp.get("response_code") != APROVED_CODE:
+            view = "error_pages/rejected.html"
+            data["response_data"] = resp
+            
+        else:
             view = "oneclick_mall_deferred/finish.html"
             data = {
             "request_data": {
@@ -82,9 +86,7 @@ def finish(request):
             "child_commerce_code1": IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED_CHILD1,
             "child_commerce_code2": IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED_CHILD2,
             }
-        else:
-            view = "error_pages/rejected.html"
-            data["response_data"] = resp
+            
             
 
         return render(request, view, data)
