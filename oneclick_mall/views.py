@@ -8,6 +8,7 @@ from transbank.common.integration_commerce_codes import IntegrationCommerceCodes
 from transbank.common.integration_api_keys import IntegrationApiKeys
 
 ERROR_TEMPLATE = "error_pages/general_error.html"
+APROVED_CODE = 0
 
 def get_transbank_inscription():
     return MallInscription.build_for_integration(
@@ -65,11 +66,7 @@ def finish(request):
         resp = inscription.finish(tbk_token)
         request.session["tbk_user"] = resp.get("tbk_user")
         
-        if resp.get("response_code") == -1:
-            view = "error_pages/rejected.html"
-            data["response_data"] = resp
-        else:
-            resp = inscription.finish(tbk_token)
+        if resp.get("response_code") == APROVED_CODE:
             view = "oneclick_mall/finish.html"
             data = {
             "request_data": {
@@ -82,7 +79,11 @@ def finish(request):
             "response_data": resp,
             "child_commerce_code1": IntegrationCommerceCodes.ONECLICK_MALL_CHILD1,
             "child_commerce_code2": IntegrationCommerceCodes.ONECLICK_MALL_CHILD2,
-        }
+            }
+            
+        else:
+            view = "error_pages/rejected.html"
+            data["response_data"] = resp
 
         return render(request, view, data)
 
