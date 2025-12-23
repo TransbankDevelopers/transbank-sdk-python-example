@@ -8,7 +8,7 @@ from transbank.common.integration_commerce_codes import IntegrationCommerceCodes
 from transbank.common.integration_api_keys import IntegrationApiKeys
 
 ERROR_TEMPLATE = "error_pages/general_error.html"
-APPROVE_CODE = 0
+APPROVED_CODE = 0
 
 def get_transbank_inscription():
     return MallInscription.build_for_integration(
@@ -66,7 +66,7 @@ def finish(request):
         resp = inscription.finish(tbk_token)
         request.session["tbk_user"] = resp.get("tbk_user")
         
-        if resp.get("response_code") != APROVED_CODE:
+        if resp.get("response_code") != APPROVED_CODE:
             view = "error_pages/rejected.html"
             data["response_data"] = resp
             
