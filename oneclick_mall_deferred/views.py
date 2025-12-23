@@ -54,8 +54,8 @@ def start(request):
 
 @require_GET
 def finish(request):
-    inscription = get_transbank_inscription()
     try:
+        inscription = get_transbank_inscription()
         view = "error_pages/general_error.html"
         data = {"request": request, "product": "Oneclick Mall Diferido"}
         tbk_token = request.GET.get("TBK_TOKEN")
