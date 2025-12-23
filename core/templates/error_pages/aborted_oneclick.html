@@ -12,9 +12,8 @@
   <p class="mb-32">
       Después de que el usuario anule la compra en el formulario de pago, recibirás un GET con la siguiente información:
   </p>
-  {{ request.GET|prettyjson|highlight_code:"json" }}
-
-  <div class="mb-32"></div>
   
-  
+  <div class="mb-32">
+    {{ request.GET|prettyjson|highlight_code:"json" }}
+  </div>
 {% endblock %}
