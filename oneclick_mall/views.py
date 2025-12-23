@@ -8,7 +8,7 @@ from transbank.common.integration_commerce_codes import IntegrationCommerceCodes
 from transbank.common.integration_api_keys import IntegrationApiKeys
 
 ERROR_TEMPLATE = "error_pages/general_error.html"
-APROVED_CODE = 0
+APPROVE_CODE = 0
 
 def get_transbank_inscription():
     return MallInscription.build_for_integration(

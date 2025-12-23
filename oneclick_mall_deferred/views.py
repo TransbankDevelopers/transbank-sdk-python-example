@@ -10,7 +10,7 @@ from transbank.common.integration_commerce_codes import IntegrationCommerceCodes
 from transbank.common.integration_api_keys import IntegrationApiKeys
 
 ERROR_TEMPLATE = "error_pages/general_error.html"
-APROVED_CODE = 0
+APPROVE_CODE = 0
 
 def get_transbank_inscription():
     return MallInscription.build_for_integration(
@@ -71,7 +71,7 @@ def finish(request):
         if resp.get("response_code") != APROVED_CODE:
             view = "error_pages/rejected.html"
             data["response_data"] = resp
-            
+
         else:
             view = "oneclick_mall_deferred/finish.html"
             data = {
