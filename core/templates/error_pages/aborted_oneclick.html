@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% load static highlight_code %}
+{% block title %}Error{% endblock %}
+
+{% block content %}
+  <h1 id="cancel">{{ product }} - Estado de compra anulada</h1>
+  <p class="mb-32">
+    La inscripción ha sido anulada por el usuario. En esta instancia, la inscripción fue abandonada al seleccionar la opción 'Abandonar y volver al comercio'
+  </p>
+
+  <h2>Datos recibidos:</h2>
+  <p class="mb-32">
+      Después de que el usuario anule la compra en el formulario de pago, recibirás un GET con la siguiente información:
+  </p>
+  
+  <div class="mb-32">
+    {{ request.GET|prettyjson|highlight_code:"json" }}
+  </div>
+{% endblock %}
