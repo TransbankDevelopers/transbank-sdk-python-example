@@ -23,6 +23,10 @@
             gtag("config", "G-02BDNS38Y1");
         </script>
 
+         <!--card.js -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/card/2.5.4/card.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/card/2.5.4/card.min.js" integrity="sha512-bap2DVGWmQ620Jpimq4jr/z96eYAryS1h7FrrBY2ndRkLAD465BDAGr5k5OIxkd92J5Nt1hRJlhXSra6ECbZdg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
         {% block head %}{% endblock %} {% load static %}
         <link rel="icon" href="{% static 'favicon.ico' %}" type="image/vnd.microsoft.icon" />
         <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
@@ -52,5 +56,6 @@
 
         <script src="{% static 'js/sidebar.js' %}"></script>
         <script src="{% static 'js/navigation.js' %}"></script>
+        {% block extra_js %}{% endblock %}
     </body>
 </html>
