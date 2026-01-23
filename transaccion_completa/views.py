@@ -3,7 +3,7 @@ import logging
 import re
 
 from django.shortcuts import render
-from django.views.decorators.http import require_GET, require_http_methods
+from django.views.decorators.http import require_GET, require_POST
 from django.views.decorators.csrf import csrf_exempt
 
 from transbank.webpay.transaccion_completa.transaction import Transaction
@@ -27,7 +27,7 @@ def index(request):
     return render(request, "transaccion_completa/index.html")
 
 
-@require_http_methods(["GET", "POST"])
+@require_POST
 def create(request):
     tx = get_transbank_transaction()
     try:
@@ -102,7 +102,7 @@ def installments(request):
         return render(request, ERROR_TEMPLATE, {"error": str(e)})
 
 
-@require_http_methods(["GET", "POST"])
+@require_GET
 def commit(request):
     tx = get_transbank_transaction()
     try:
