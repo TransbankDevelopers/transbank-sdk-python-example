@@ -272,6 +272,11 @@ code {
 .mb-20 {
   margin-bottom: 20px;
 }
+
+.mr-16 {
+  margin-right: 16px;
+}
+
 .tbk-link {
   color: var(--tbk-red);
   text-decoration: none;
@@ -438,6 +443,10 @@ code {
 
 .tbk-card {
   flex-direction: column;
+}
+
+.tbk-card.large {
+  max-width: unset;
 }
 
 .tbk-capture-section {
@@ -1128,6 +1137,49 @@ code {
   to {
     transform: rotate(360deg);
   }
+}
+
+/* tx completa */
+
+.card-inputs-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 50px;
+  margin-top: 70px;
+}
+
+.card-split-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 31px;
+}
+
+.card-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding-top: 1.5rem;
+}
+
+.card-border {
+  border: 1px solid #c9d0e4;
+  border-radius: 1px;
+  margin-bottom: 30px;
+  width: 100%;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.card-wrapper {
+  z-index: 0;
 }
 
 @media (max-width: 1439.98px) {
