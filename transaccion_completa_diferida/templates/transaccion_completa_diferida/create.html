@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+{% load static highlight_code %}
+
+{% block title %}Transacción Completa Diferida - Crear transacción{% endblock %}
+
+{% block content %}
+
+{% component "breadcrumbs" items=[
+    {"name": "Inicio", "url": "/"},
+    {"name": "Transacción Completa Diferida", "url": "/transaccion-completa-diferida/"},
+    {"name": "Crear transacción", "url": "/transaccion-completa-diferida/create/"}
+] %}{% endcomponent %}
+
+<h1>Transacción Completa Diferida - Crear transacción</h1>
+<p class="mb-32">
+    En este paso sucede la creación de la transacción con el objetivo de obtener un identificador único para la misma.
+</p>
+
+<h2 id="request">Paso 1: Petición</h2>
+<p class="mb-32">
+    Comienza importando la librería TransaccionCompleta, y a continuación, crea la transacción necesaria.
+</p>
+
+{% filter highlight_code:"python" %}
+tx = Transaction.build_for_integration(
+        IntegrationCommerceCodes.TRANSACCION_COMPLETA_DEFERRED,
+        IntegrationApiKeys.WEBPAY
+    )
+    
+resp = tx.create(
+    buy_order,
+    session_id,
+    amount,
+    cvc,
+    card_number,
+    card_expiry_formatted
+)
+{% endfilter %}
+
+<h2 class="mt-32" id="response">Paso 2: Respuesta</h2>
+<p class="mb-32">
+    Una vez creada la transacción, recibirás los siguientes datos de respuesta:
+</p>
+
+{{ response_data|prettyjson|highlight_code:"json" }}
+
+<h2 class="mt-32" id="example">¡Transacción creada!</h2>
+<p class="mb-32">
+    Ahora que hemos creado la transacción, se abren dos opciones para continuar:
+</p>
+
+<ul class="bullet-list mb-32">
+    <li>
+        <strong>Consultar Cuotas (opcional):</strong> Alternativamente puedes realizar consultas de cuotas para ofrecer opciones de pago a plazos.
+    </li>
+    <li>
+        <strong>Confirmar Transacción:</strong> Debes confirmar directamente la transacción para finalizar con el proceso de pago.
+    </li>
+</ul>
+
+<p class="mb-32">
+    Con la respuesta del servicio que confirma la creación de la transacción, procedemos a continuar con los siguientes pasos del proceso.
+</p>
+
+<form method="GET">
+    {% csrf_token %}
+    <div class="tbk-card">
+        <span class="tbk-card-title">Opciones de pago</span>
+        
+        <input type="hidden" name="token" value="{{ response_data.token }}">
+        
+        <div class="input-container">
+            <label for="installments_number" class="tbk-label">N° de cuotas:</label>
+            <input type="text" id="installments_number" name="installments_number" class="tbk-input-text" value="3">
+        </div>
+
+        <div class="tbk-card-footer">
+            <button type="submit" name="action" value="installments" class="tbk-button primary mr-16" formaction="{% url 'transaccion_completa_diferida:installments' %}">
+                CONSULTAR CUOTAS
+            </button>
+
+            <button type="submit" name="action" value="commit" class="tbk-button primary" formaction="{% url 'transaccion_completa_diferida:commit' %}">
+                CONFIRMAR
+            </button>
+        </div>
+    </div>
+</form>
+
+{% endblock %}
