@@ -14,6 +14,9 @@ logger = logging.getLogger(__name__)
 
 ERROR_TEMPLATE = "error_pages/general_error.html"
 
+REQUEST_LABEL = "Petición"
+RESPONSE_LABEL = "Respuesta"
+FORM_LABEL = "Formulario"
 
 def get_transbank_transaction():
     return Transaction.build_for_integration(
@@ -30,6 +33,11 @@ def index(request):
 @require_POST
 def create(request):
     tx = get_transbank_transaction()
+    navigation = {
+        "request": REQUEST_LABEL,
+        "response": RESPONSE_LABEL,
+        "form": FORM_LABEL,
+    }
     try:
         card_number = request.POST.get("number", "")
         expiry = request.POST.get("expiry", "")
@@ -67,6 +75,7 @@ def create(request):
         context = {
             "request_data": request_data,
             "response_data": resp,
+            "navigation": navigation,
         }
         
         return render(request, "transaccion_completa_diferida/create.html", context)
@@ -79,6 +88,11 @@ def create(request):
 @require_GET
 def installments(request):
     tx = get_transbank_transaction()
+    navigation = {
+        "request": REQUEST_LABEL,
+        "response": RESPONSE_LABEL,
+        "form": FORM_LABEL,
+    }
     try:
         token = request.GET.get("token")
         installments_number = int(request.GET.get("installments_number", "0"))
@@ -93,6 +107,7 @@ def installments(request):
         context = {
             "request_data": request_data,
             "response_data": resp,
+            "navigation": navigation,
         }
         
         return render(request, "transaccion_completa_diferida/installments.html", context)
@@ -105,6 +120,11 @@ def installments(request):
 @require_GET
 def commit(request):
     tx = get_transbank_transaction()
+    navigation = {
+        "request": REQUEST_LABEL,
+        "response": RESPONSE_LABEL,
+        "form": FORM_LABEL,
+    }
     try:
         token = request.GET.get("token") or request.POST.get("token")
         id_query_installments = request.GET.get("idQueryInstallments") or request.POST.get("idQueryInstallments")
@@ -131,6 +151,7 @@ def commit(request):
             "request_data": request_data,
             "response_data": resp,
             "amount": amount,
+            "navigation": navigation,
         }
         
         return render(request, "transaccion_completa_diferida/commit.html", context)
@@ -143,6 +164,10 @@ def commit(request):
 @require_GET
 def status(request):
     tx = get_transbank_transaction()
+    navigation = {
+        "request": REQUEST_LABEL,
+        "response": RESPONSE_LABEL,
+    }
     try:
         token = request.GET.get("token")
         
@@ -155,6 +180,7 @@ def status(request):
         context = {
             "request_data": request_data,
             "response_data": resp,
+            "navigation": navigation,
         }
         
         return render(request, "transaccion_completa_diferida/status.html", context)
@@ -167,6 +193,10 @@ def status(request):
 @require_GET
 def refund(request):
     tx = get_transbank_transaction()
+    navigation = {
+        "request": REQUEST_LABEL,
+        "response": RESPONSE_LABEL,
+    }
     try:
         token = request.GET.get("token")
         amount = int(request.GET.get("amount", "0"))
@@ -181,6 +211,7 @@ def refund(request):
         context = {
             "request_data": request_data,
             "response_data": resp,
+            "navigation": navigation,
         }
         
         return render(request, "transaccion_completa_diferida/refund.html", context)
@@ -193,6 +224,11 @@ def refund(request):
 @require_GET
 def capture(request):
     tx = get_transbank_transaction()
+    navigation = {
+        "request": REQUEST_LABEL,
+        "response": RESPONSE_LABEL,
+        "form": FORM_LABEL,
+    }
     try:
         token = request.GET.get("token")
         buy_order = request.GET.get("buy_order")
@@ -213,6 +249,7 @@ def capture(request):
             "response_data": resp,
             "token": token,
             "amount": amount,
+            "navigation": navigation,
         }
         
         return render(request, "transaccion_completa_diferida/capture.html", context)

@@ -10,6 +10,10 @@ from transbank.webpay.transaccion_completa.transaction import Transaction
 from transbank.common.integration_commerce_codes import IntegrationCommerceCodes
 from transbank.common.integration_api_keys import IntegrationApiKeys
 
+REQUEST_LABEL = "Petición"
+RESPONSE_LABEL = "Respuesta"
+FORM_LABEL = "Formulario"
+
 logger = logging.getLogger(__name__)
 
 ERROR_TEMPLATE = "error_pages/general_error.html"
@@ -29,6 +33,11 @@ def index(request):
 
 @require_POST
 def create(request):
+    navigation = {
+        "request": REQUEST_LABEL,
+        "response": RESPONSE_LABEL,
+        "form": FORM_LABEL,
+    }
     tx = get_transbank_transaction()
     try:
         card_number = request.POST.get("number", "")
@@ -67,6 +76,7 @@ def create(request):
         context = {
             "request_data": request_data,
             "response_data": resp,
+            "navigation": navigation,
         }
         
         return render(request, "transaccion_completa/create.html", context)
@@ -79,6 +89,11 @@ def create(request):
 @require_GET
 def installments(request):
     tx = get_transbank_transaction()
+    navigation = {
+        "request": REQUEST_LABEL,
+        "response": RESPONSE_LABEL,
+        "form": FORM_LABEL,
+    }
     try:
         token = request.GET.get("token")
         installments_number = int(request.GET.get("installments_number", "0"))
@@ -93,6 +108,7 @@ def installments(request):
         context = {
             "request_data": request_data,
             "response_data": resp,
+            "navigation": navigation,
         }
         
         return render(request, "transaccion_completa/installments.html", context)
@@ -105,6 +121,11 @@ def installments(request):
 @require_GET
 def commit(request):
     tx = get_transbank_transaction()
+    navigation = {
+        "request": REQUEST_LABEL,
+        "response": RESPONSE_LABEL,
+        "form": FORM_LABEL,
+    }
     try:
         token = request.GET.get("token") or request.POST.get("token")
         id_query_installments = request.GET.get("idQueryInstallments") or request.POST.get("idQueryInstallments")
@@ -131,6 +152,7 @@ def commit(request):
             "request_data": request_data,
             "response_data": resp,
             "amount": amount,
+            "navigation": navigation,
         }
         
         return render(request, "transaccion_completa/commit.html", context)
@@ -143,6 +165,10 @@ def commit(request):
 @require_GET
 def status(request):
     tx = get_transbank_transaction()
+    navigation = {
+        "request": REQUEST_LABEL,
+        "response": RESPONSE_LABEL,
+    }
     try:
         token = request.GET.get("token")
         
@@ -155,6 +181,7 @@ def status(request):
         context = {
             "request_data": request_data,
             "response_data": resp,
+            "navigation": navigation,
         }
         
         return render(request, "transaccion_completa/status.html", context)
@@ -167,6 +194,10 @@ def status(request):
 @require_GET
 def refund(request):
     tx = get_transbank_transaction()
+    navigation = {
+        "request": REQUEST_LABEL,
+        "response": RESPONSE_LABEL,
+    }
     try:
         token = request.GET.get("token")
         amount = int(request.GET.get("amount", "0"))
@@ -181,6 +212,7 @@ def refund(request):
         context = {
             "request_data": request_data,
             "response_data": resp,
+            "navigation": navigation,
         }
         
         return render(request, "transaccion_completa/refund.html", context)

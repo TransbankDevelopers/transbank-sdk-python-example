@@ -44,7 +44,7 @@ resp = tx.create(
 
 {{ response_data|prettyjson|highlight_code:"json" }}
 
-<h2 class="mt-32" id="example">¡Transacción creada!</h2>
+<h2 class="mt-32" >¡Transacción creada!</h2>
 <p class="mb-32">
     Ahora que hemos creado la transacción, se abren dos opciones para continuar:
 </p>
@@ -62,7 +62,7 @@ resp = tx.create(
     Con la respuesta del servicio que confirma la creación de la transacción, procedemos a continuar con los siguientes pasos del proceso.
 </p>
 
-<form method="GET">
+<form id="form" method="GET">
     {% csrf_token %}
     <div class="tbk-card">
         <span class="tbk-card-title">Opciones de pago</span>
