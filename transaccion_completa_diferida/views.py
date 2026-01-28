@@ -10,35 +10,34 @@ from transbank.webpay.transaccion_completa.transaction import Transaction
 from transbank.common.integration_commerce_codes import IntegrationCommerceCodes
 from transbank.common.integration_api_keys import IntegrationApiKeys
 
-REQUEST_LABEL = "Petición"
-RESPONSE_LABEL = "Respuesta"
-FORM_LABEL = "Formulario"
-
 logger = logging.getLogger(__name__)
 
 ERROR_TEMPLATE = "error_pages/general_error.html"
 
+REQUEST_LABEL = "Petición"
+RESPONSE_LABEL = "Respuesta"
+FORM_LABEL = "Formulario"
 
 def get_transbank_transaction():
     return Transaction.build_for_integration(
-        IntegrationCommerceCodes.TRANSACCION_COMPLETA,
+        IntegrationCommerceCodes.TRANSACCION_COMPLETA_DEFERRED,
         IntegrationApiKeys.WEBPAY
     )
 
 
 @require_GET
 def index(request):
-    return render(request, "transaccion_completa/index.html")
+    return render(request, "transaccion_completa_diferida/index.html")
 
 
 @require_POST
 def create(request):
+    tx = get_transbank_transaction()
     navigation = {
         "request": REQUEST_LABEL,
         "response": RESPONSE_LABEL,
         "form": FORM_LABEL,
     }
-    tx = get_transbank_transaction()
     try:
         card_number = request.POST.get("number", "")
         expiry = request.POST.get("expiry", "")
@@ -65,7 +64,7 @@ def create(request):
             card_expiry_formatted
         )
         
-        request.session["transaccion_completa_amount"] = amount
+        request.session["transaccion_completa_diferida_amount"] = amount
         
         request_data = {
             "buy_order": buy_order,
@@ -79,10 +78,10 @@ def create(request):
             "navigation": navigation,
         }
         
-        return render(request, "transaccion_completa/create.html", context)
+        return render(request, "transaccion_completa_diferida/create.html", context)
         
     except Exception as e:
-        logger.error(f"Error en Transacción Completa - Create: {str(e)}")
+        logger.error(f"Error en Transacción Completa Diferida - Create: {str(e)}")
         return render(request, ERROR_TEMPLATE, {"error": str(e)})
 
 
@@ -111,10 +110,10 @@ def installments(request):
             "navigation": navigation,
         }
         
-        return render(request, "transaccion_completa/installments.html", context)
+        return render(request, "transaccion_completa_diferida/installments.html", context)
         
     except Exception as e:
-        logger.error(f"Error en Transacción Completa - Installments: {str(e)}")
+        logger.error(f"Error en Transacción Completa Diferida - Installments: {str(e)}")
         return render(request, ERROR_TEMPLATE, {"error": str(e)})
 
 
@@ -139,9 +138,9 @@ def commit(request):
             grace_period
         )
         
-        amount = request.session.get("transaccion_completa_amount")
-        if "transaccion_completa_amount" in request.session:
-            del request.session["transaccion_completa_amount"]
+        amount = request.session.get("transaccion_completa_diferida_amount")
+        if "transaccion_completa_diferida_amount" in request.session:
+            del request.session["transaccion_completa_diferida_amount"]
         
         request_data = {
             "token": token,
@@ -155,10 +154,10 @@ def commit(request):
             "navigation": navigation,
         }
         
-        return render(request, "transaccion_completa/commit.html", context)
+        return render(request, "transaccion_completa_diferida/commit.html", context)
         
     except Exception as e:
-        logger.error(f"Error en Transacción Completa - Commit: {str(e)}")
+        logger.error(f"Error en Transacción Completa Diferida - Commit: {str(e)}")
         return render(request, ERROR_TEMPLATE, {"error": str(e)})
 
 
@@ -184,10 +183,10 @@ def status(request):
             "navigation": navigation,
         }
         
-        return render(request, "transaccion_completa/status.html", context)
+        return render(request, "transaccion_completa_diferida/status.html", context)
         
     except Exception as e:
-        logger.error(f"Error en Transacción Completa - Status: {str(e)}")
+        logger.error(f"Error en Transacción Completa Diferida - Status: {str(e)}")
         return render(request, ERROR_TEMPLATE, {"error": str(e)})
 
 
@@ -215,8 +214,46 @@ def refund(request):
             "navigation": navigation,
         }
         
-        return render(request, "transaccion_completa/refund.html", context)
+        return render(request, "transaccion_completa_diferida/refund.html", context)
         
     except Exception as e:
-        logger.error(f"Error en Transacción Completa - Refund: {str(e)}")
+        logger.error(f"Error en Transacción Completa Diferida - Refund: {str(e)}")
+        return render(request, ERROR_TEMPLATE, {"error": str(e)})
+
+
+@require_GET
+def capture(request):
+    tx = get_transbank_transaction()
+    navigation = {
+        "request": REQUEST_LABEL,
+        "response": RESPONSE_LABEL,
+        "form": FORM_LABEL,
+    }
+    try:
+        token = request.GET.get("token")
+        buy_order = request.GET.get("buy_order")
+        authorization_code = request.GET.get("authorization_code")
+        amount = int(request.GET.get("amount", "0"))
+        
+        resp = tx.capture(token, buy_order, authorization_code, amount)
+        
+        request_data = {
+            "token": token,
+            "buy_order": buy_order,
+            "authorization_code": authorization_code,
+            "amount": amount,
+        }
+        
+        context = {
+            "request_data": request_data,
+            "response_data": resp,
+            "token": token,
+            "amount": amount,
+            "navigation": navigation,
+        }
+        
+        return render(request, "transaccion_completa_diferida/capture.html", context)
+        
+    except Exception as e:
+        logger.error(f"Error en Transacción Completa Diferida - Capture: {str(e)}")
         return render(request, ERROR_TEMPLATE, {"error": str(e)})

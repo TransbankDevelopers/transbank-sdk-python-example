@@ -1,17 +1,17 @@
 {% extends "layout.html" %}
 {% load static highlight_code %}
 
-{% block title %}Transacción Completa - Consultar cuotas{% endblock %}
+{% block title %}Transacción Completa Diferida - Consultar cuotas{% endblock %}
 
 {% block content %}
 
 {% component "breadcrumbs" items=[
     {"name": "Inicio", "url": "/"},
-    {"name": "Transacción Completa", "url": "/transaccion-completa/"},
-    {"name": "Consultar cuotas", "url": "/transaccion-completa/installments/"}
+    {"name": "Transacción Completa Diferida", "url": "/transaccion-completa-diferida/"},
+    {"name": "Consultar cuotas", "url": "/transaccion-completa-diferida/installments/"}
 ] %}{% endcomponent %}
 
-<h1>Transacción Completa - Consultar cuotas</h1>
+<h1>Transacción Completa Diferida - Consultar cuotas</h1>
 <p class="mb-32">
     En esta etapa, realizaremos una consulta de cuotas para conocer sus condiciones. Es importante destacar que este paso es opcional y se utiliza únicamente si deseas ofrecer opciones de pago a plazos.
 
@@ -24,7 +24,7 @@
 
 {% filter highlight_code:"python" %}
 tx = Transaction.build_for_integration(
-        IntegrationCommerceCodes.TRANSACCION_COMPLETA,
+        IntegrationCommerceCodes.TRANSACCION_COMPLETA_DEFERRED,
         IntegrationApiKeys.WEBPAY
     )
 
@@ -38,12 +38,12 @@ resp = tx.installments(token, installments_number)
 
 {{ response_data|prettyjson|highlight_code:"json" }}
 
-<h2 class="mt-32" id="form">Confirmar Transacción</h2>
+<h2 class="mt-32">Confirmar Transacción</h2>
 <p class="mb-32">
     Si decides utilizar cuotas y estás satisfecho con las condiciones obtenidas en la consulta, el siguiente paso sería confirmar la transacción.
 </p>
 
-<form method="GET" action="{% url 'transaccion_completa:commit' %}" class="tbk-form">
+<form id="form" method="GET" action="{% url 'transaccion_completa_diferida:commit' %}" class="tbk-form">
     {% csrf_token %}
     <div class="tbk-card">
         <div class="input-container mb-16">

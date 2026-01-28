@@ -1,17 +1,17 @@
 {% extends "layout.html" %}
 {% load static highlight_code %}
 
-{% block title %}Transacción Completa - Crear transacción{% endblock %}
+{% block title %}Transacción Completa Diferida - Crear transacción{% endblock %}
 
 {% block content %}
 
 {% component "breadcrumbs" items=[
     {"name": "Inicio", "url": "/"},
-    {"name": "Transacción Completa", "url": "/transaccion-completa/"},
-    {"name": "Crear transacción", "url": "/transaccion-completa/create/"}
+    {"name": "Transacción Completa Diferida", "url": "/transaccion-completa-diferida/"},
+    {"name": "Crear transacción", "url": "/transaccion-completa-diferida/create/"}
 ] %}{% endcomponent %}
 
-<h1>Transacción Completa - Crear transacción</h1>
+<h1>Transacción Completa Diferida - Crear transacción</h1>
 <p class="mb-32">
     En este paso sucede la creación de la transacción con el objetivo de obtener un identificador único para la misma.
 </p>
@@ -23,7 +23,7 @@
 
 {% filter highlight_code:"python" %}
 tx = Transaction.build_for_integration(
-        IntegrationCommerceCodes.TRANSACCION_COMPLETA,
+        IntegrationCommerceCodes.TRANSACCION_COMPLETA_DEFERRED,
         IntegrationApiKeys.WEBPAY
     )
     
@@ -75,11 +75,11 @@ resp = tx.create(
         </div>
 
         <div class="tbk-card-footer">
-            <button type="submit" name="action" value="installments" class="tbk-button primary mr-16" formaction="{% url 'transaccion_completa:installments' %}">
+            <button type="submit" name="action" value="installments" class="tbk-button primary mr-16" formaction="{% url 'transaccion_completa_diferida:installments' %}">
                 CONSULTAR CUOTAS
             </button>
 
-            <button type="submit" name="action" value="commit" class="tbk-button primary" formaction="{% url 'transaccion_completa:commit' %}">
+            <button type="submit" name="action" value="commit" class="tbk-button primary" formaction="{% url 'transaccion_completa_diferida:commit' %}">
                 CONFIRMAR
             </button>
         </div>
