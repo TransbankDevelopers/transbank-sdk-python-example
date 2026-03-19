@@ -63,7 +63,7 @@ resp = tx.commit(token, details)
 </ul>
 
 {% for detail in response_data.details %}
-<form method="GET" action="{% url 'transaccion_completa_mall:refund' %}">
+<form method="GET" action="{% url 'transaccion_completa_mall:refund' %}" data-loading-form="true">
     <div class="tbk-card">
         <span class="tbk-card-title">Reembolsar detalle</span>
         <div class="input-container mb-32">
@@ -77,7 +77,10 @@ resp = tx.commit(token, details)
         </div>
 
         <div class="tbk-card-footer">
-            <button type="submit" class="tbk-button primary">REEMBOLSAR</button>
+            <button type="submit" class="tbk-button primary loading-button" data-loading-button="true">
+                <span class="loading-spinner" aria-hidden="true"></span>
+                <span>REEMBOLSAR</span>
+            </button>
         </div>
     </div>
 </form>
