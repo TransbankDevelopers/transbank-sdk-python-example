@@ -64,10 +64,7 @@
 <form method="GET" action="{% url 'transaccion_completa_mall:commit' %}" class="tbk-form">
     {% csrf_token %}
     <div class="tbk-card">
-        <div class="input-container mb-16">
-            <label for="token" class="tbk-label">Token</label>
-            <input type="text" id="token" name="token" class="tbk-input-text" value="{{ request_data.token }}" readonly>
-        </div>
+        <input type="hidden" name="token" value="{{ request_data.token }}">
 
         <div class="input-container mb-16">
             <label for="idQueryInstallments" class="tbk-label">ID de consulta de cuotas (Opcional)</label>
