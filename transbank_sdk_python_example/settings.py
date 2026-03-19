@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     'oneclick_mall_deferred.apps.OneclickMallDeferredConfig',
     'transaccion_completa.apps.TransaccionCompletaConfig',
     'transaccion_completa_diferida.apps.TransaccionCompletaDiferidaConfig',
+    'transaccion_completa_mall.apps.TransaccionCompletaMallConfig',
+    'transaccion_completa_mall_diferido.apps.TransaccionCompletaMallDiferidoConfig',
 ]
 
 MIDDLEWARE = [
