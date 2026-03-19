@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% load static highlight_code %}
+
+{% block title %}Transacción Completa Mall - Reembolsar{% endblock %}
+
+{% block content %}
+
+{% component "breadcrumbs" items=[
+    {"name": "Inicio", "url": "/"},
+    {"name": "Transacción Completa Mall", "url": "/transaccion-completa-mall/"},
+    {"name": "Reembolsar", "url": "/transaccion-completa-mall/refund/"}
+] %}{% endcomponent %}
+
+<h1>Transacción Completa Mall - Reembolsar</h1>
+<p class="mb-32">
+    En esta etapa, tendrás la posibilidad de solicitar el reembolso del dinero al tarjeta habiente. El
+    tipo de reembolso (Reversa, Anulación o Anulación parcial) dependerá del monto y el tiempo transcurrido desde la
+    transacción.
+</p>
+
+<h2 id="request">Paso 1: Petición</h2>
+<p class="mb-32">
+    Para efectuar la solicitud de reembolso, necesitarás el token de la transacción, el buy order del detalle,
+    el commerce code (tienda) y el monto que deseas reversar.
+</p>
+
+{% filter highlight_code:"python" %}
+tx = MallTransaction.build_for_integration(
+        IntegrationCommerceCodes.TRANSACCION_COMPLETA_MALL,
+        IntegrationApiKeys.WEBPAY
+    )
+
+resp = tx.refund(token, buy_order, commerce_code, amount)
+{% endfilter %}
+
+<h2 class="mt-32" id="response">Paso 2: Respuesta</h2>
+<p class="mb-32">
+    Transbank responderá con el resultado de la reversa o anulación. Evalúa cuidadosamente esta respuesta para
+    confirmar que el reembolso se haya procesado de manera efectiva.
+</p>
+
+{{ response_data|prettyjson|highlight_code:"json" }}
+
+<div class="mt-32 mb-32">
+    <a href="{% url 'transaccion_completa_mall:status' %}?token={{ request_data.token }}" class="tbk-button primary">
+        CONSULTAR ESTADO
+    </a>
+</div>
+
+{% endblock %}
