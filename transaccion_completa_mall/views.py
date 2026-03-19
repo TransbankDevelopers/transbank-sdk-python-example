@@ -111,7 +111,10 @@ def installments(request):
     }
     try:
         token = request.GET.get("token")
-        installments_number = int(request.GET.get("installments_number", "0"))
+        try:
+            installments_number = int(request.GET.get("installments_number", "0"))
+        except ValueError:
+            return render(request, ERROR_TEMPLATE, {"error": "Número de cuotas inválido"})
 
         details = request.session.get(SESSION_DETAILS_KEY)
         if not details:
@@ -155,10 +158,10 @@ def commit(request):
         "form": FORM_LABEL,
     }
     try:
-        token = request.GET.get("token") or request.POST.get("token")
-        id_query_installments = request.GET.get("idQueryInstallments") or request.POST.get("idQueryInstallments")
-        deferred_period_index = request.GET.get("deferredPeriodIndex") or request.POST.get("deferredPeriodIndex")
-        grace_period = request.GET.get("gracePeriod") or request.POST.get("gracePeriod")
+        token = request.GET.get("token")
+        id_query_installments = request.GET.get("idQueryInstallments")
+        deferred_period_index = request.GET.get("deferredPeriodIndex")
+        grace_period = request.GET.get("gracePeriod")
 
         details = request.session.get(SESSION_DETAILS_KEY)
         if not details:
@@ -237,7 +240,10 @@ def refund(request):
         token = request.GET.get("token")
         buy_order = request.GET.get("buy_order")
         commerce_code = request.GET.get("commerce_code")
-        amount = int(request.GET.get("amount", "0"))
+        try:
+            amount = int(request.GET.get("amount", "0"))
+        except ValueError:
+            return render(request, ERROR_TEMPLATE, {"error": "Monto inválido"})
 
         resp = tx.refund(token, buy_order, commerce_code, amount)
 
