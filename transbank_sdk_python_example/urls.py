@@ -27,5 +27,7 @@ urlpatterns = [
     path('oneclick-mall/', include('oneclick_mall.urls', namespace='oneclick_mall')),
     path('oneclick-mall-diferido/', include('oneclick_mall_deferred.urls', namespace='oneclick_mall_deferred')),
     path('transaccion-completa/', include('transaccion_completa.urls', namespace='transaccion_completa')),
-    path('transaccion-completa-diferida/', include('transaccion_completa_diferida.urls', namespace='transaccion_completa_diferida'))
+    path('transaccion-completa-diferida/', include('transaccion_completa_diferida.urls', namespace='transaccion_completa_diferida')),
+    path('transaccion-completa-mall/', include('transaccion_completa_mall.urls', namespace='transaccion_completa_mall')),
+    path('transaccion-completa-mall-diferido/', include('transaccion_completa_mall_diferido.urls', namespace='transaccion_completa_mall_diferido'))
 ]
