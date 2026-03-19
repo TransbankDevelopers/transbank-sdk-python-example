@@ -1,0 +1,102 @@
+{% extends "layout.html" %}
+{% load static highlight_code %}
+
+{% block title %}Transacción Completa Mall - Crear transacción{% endblock %}
+
+{% block content %}
+
+{% component "breadcrumbs" items=[
+    {"name": "Inicio", "url": "/"},
+    {"name": "Transacción Completa Mall", "url": "/transaccion-completa-mall/"},
+    {"name": "Crear transacción", "url": "/transaccion-completa-mall/create/"}
+] %}{% endcomponent %}
+
+<h1>Transacción Completa Mall - Crear transacción</h1>
+<p class="mb-32">
+    En este paso sucede la creación de la transacción con el objetivo de obtener un identificador único para la misma.
+</p>
+
+<h2 id="request">Paso 1: Petición</h2>
+<p class="mb-32">
+    Comienza importando la librería TransaccionCompleta Mall, y a continuación, crea la transacción necesaria.
+</p>
+
+{% filter highlight_code:"python" %}
+tx = MallTransaction.build_for_integration(
+        IntegrationCommerceCodes.TRANSACCION_COMPLETA_MALL,
+        IntegrationApiKeys.WEBPAY
+    )
+
+details = [
+    {
+        "amount": 1000,
+        "commerce_code": IntegrationCommerceCodes.TRANSACCION_COMPLETA_MALL_CHILD1,
+        "buy_order": "O-123"
+    },
+    {
+        "amount": 1000,
+        "commerce_code": IntegrationCommerceCodes.TRANSACCION_COMPLETA_MALL_CHILD2,
+        "buy_order": "O-456"
+    }
+]
+
+resp = tx.create(
+    buy_order,
+    session_id,
+    card_number,
+    card_expiry_formatted,
+    details,
+    cvc
+)
+{% endfilter %}
+
+<h2 class="mt-32" id="response">Paso 2: Respuesta</h2>
+<p class="mb-32">
+    Una vez creada la transacción, recibirás los siguientes datos de respuesta:
+</p>
+
+{{ response_data|prettyjson|highlight_code:"json" }}
+
+<h2 class="mt-32" >¡Transacción creada!</h2>
+<p class="mb-32">
+    Ahora que hemos creado la transacción, se abren dos opciones para continuar:
+</p>
+
+<ul class="bullet-list mb-32">
+    <li>
+        <strong>Consultar Cuotas (opcional):</strong> Alternativamente puedes realizar consultas de cuotas para ofrecer opciones de pago a plazos.
+    </li>
+    <li>
+        <strong>Confirmar Transacción:</strong> Debes confirmar directamente la transacción para finalizar con el proceso de pago.
+    </li>
+</ul>
+
+<p class="mb-32">
+    Con la respuesta del servicio que confirma la creación de la transacción, procedemos a continuar con los siguientes pasos del proceso.
+</p>
+
+<form id="form" method="GET">
+    {% csrf_token %}
+    <div class="tbk-card">
+        <span class="tbk-card-title">Opciones de pago</span>
+        
+        <input type="hidden" name="token" value="{{ response_data.token }}">
+        
+        <div class="input-container">
+            <label for="installments_number" class="tbk-label">N° de cuotas:</label>
+            <input type="text" id="installments_number" name="installments_number" class="tbk-input-text" value="3">
+        </div>
+
+        <div class="tbk-card-footer">
+            <button type="submit" name="action" value="installments" class="tbk-button primary mr-16" formaction="{% url 'transaccion_completa_mall:installments' %}">
+                CONSULTAR CUOTAS
+            </button>
+
+            <button type="submit" name="action" value="commit" class="tbk-button primary" formaction="{% url 'transaccion_completa_mall:commit' %}">
+                CONFIRMAR
+            </button>
+        </div>
+    </div>
+</form>
+
+{% endblock %}
