@@ -34,7 +34,6 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "proyecto-ejemplo-python.continuumhq.dev",
     "proyecto-ejemplo-python.transbankdevelopers.cl",
-    ".trycloudflare.com",
     "127.0.0.1",
     "localhost",
 ]

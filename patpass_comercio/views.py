@@ -82,37 +82,9 @@ def start(request):
 @csrf_exempt
 def commit(request):
     try:
-        j_token = get_incoming_token(request, "j_token", "J_TOKEN", "token")
-        if not j_token:
-            message = get_missing_token_message(request.method)
-            return render(request, ERROR_TEMPLATE, {"error": message})
-
         if request.method == "POST":
-            request.session[SESSION_TOKEN_KEY] = j_token
-            result = redirect("patpass_comercio:commit")
-        else:
-            inscription = get_transbank_inscription()
-            response_data = inscription.status(j_token)
-            request.session[SESSION_TOKEN_KEY] = j_token
-
-            context = {
-                "navigation": {
-                    "data": "Datos recibidos",
-                    "request": "Peticion",
-                    "response": "Respuesta",
-                    "form": "Formulario",
-                },
-                "token": j_token,
-                "response_data": response_data,
-                "voucher_url": response_data.get("url_voucher") or DEFAULT_VOUCHER_URL,
-                "response_payload": {
-                    "authorized": response_data.get("status"),
-                    "voucher_url": response_data.get("url_voucher"),
-                },
-            }
-            result = render(request, "patpass_comercio/commit.html", context)
-
-        return result
+            return _commit_post(request)
+        return _commit_get(request)
     except Exception as e:
         return render(request, ERROR_TEMPLATE, {"error": str(e)})
 
@@ -121,25 +93,69 @@ def commit(request):
 @csrf_exempt
 def voucher(request):
     try:
-        j_token = get_incoming_token(request, "j_token", "J_TOKEN", "tokenComercio", "token")
-        if not j_token:
-            message = get_missing_token_message(request.method)
-            return render(request, ERROR_TEMPLATE, {"error": message})
-
         if request.method == "POST":
-            request.session[SESSION_TOKEN_KEY] = j_token
-            result = redirect("patpass_comercio:voucher")
-        else:
-            context = {
-                "navigation": {"form": "Formulario"},
-                "token": j_token,
-                "voucher_url": DEFAULT_VOUCHER_URL,
-            }
-            result = render(request, "patpass_comercio/voucher.html", context)
-
-        return result
+            return _voucher_post(request)
+        return _voucher_get(request)
     except Exception as e:
         return render(request, ERROR_TEMPLATE, {"error": str(e)})
+
+
+def _commit_post(request):
+    j_token = get_incoming_token(request, "j_token", "J_TOKEN", "token")
+    if not j_token:
+        return render(request, ERROR_TEMPLATE, {"error": get_missing_token_message("POST")})
+
+    request.session[SESSION_TOKEN_KEY] = j_token
+    return redirect("patpass_comercio:commit")
+
+
+def _commit_get(request):
+    j_token = get_incoming_token(request, "j_token", "J_TOKEN", "token")
+    if not j_token:
+        return render(request, ERROR_TEMPLATE, {"error": get_missing_token_message("GET")})
+
+    inscription = get_transbank_inscription()
+    response_data = inscription.status(j_token)
+    request.session[SESSION_TOKEN_KEY] = j_token
+
+    context = {
+        "navigation": {
+            "data": "Datos recibidos",
+            "request": "Peticion",
+            "response": "Respuesta",
+            "form": "Formulario",
+        },
+        "token": j_token,
+        "response_data": response_data,
+        "voucher_url": response_data.get("url_voucher") or DEFAULT_VOUCHER_URL,
+        "response_payload": {
+            "authorized": response_data.get("status"),
+            "voucher_url": response_data.get("url_voucher"),
+        },
+    }
+    return render(request, "patpass_comercio/commit.html", context)
+
+
+def _voucher_post(request):
+    j_token = get_incoming_token(request, "j_token", "J_TOKEN", "tokenComercio", "token")
+    if not j_token:
+        return render(request, ERROR_TEMPLATE, {"error": get_missing_token_message("POST")})
+
+    request.session[SESSION_TOKEN_KEY] = j_token
+    return redirect("patpass_comercio:voucher")
+
+
+def _voucher_get(request):
+    j_token = get_incoming_token(request, "j_token", "J_TOKEN", "tokenComercio", "token")
+    if not j_token:
+        return render(request, ERROR_TEMPLATE, {"error": get_missing_token_message("GET")})
+
+    context = {
+        "navigation": {"form": "Formulario"},
+        "token": j_token,
+        "voucher_url": DEFAULT_VOUCHER_URL,
+    }
+    return render(request, "patpass_comercio/voucher.html", context)
 
 
 def get_incoming_token(request, *keys):
