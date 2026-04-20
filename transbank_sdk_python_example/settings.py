@@ -34,6 +34,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "proyecto-ejemplo-python.continuumhq.dev",
     "proyecto-ejemplo-python.transbankdevelopers.cl",
+    ".trycloudflare.com",
     "127.0.0.1",
     "localhost",
 ]
@@ -53,6 +54,7 @@ INSTALLED_APPS = [
     'webpay_plus_mall_deferred.apps.WebpayPlusMallDeferredConfig',
     'oneclick_mall.apps.OneclickMallConfig',
     'oneclick_mall_deferred.apps.OneclickMallDeferredConfig',
+    'patpass_comercio.apps.PatpassComercioConfig',
     'transaccion_completa.apps.TransaccionCompletaConfig',
     'transaccion_completa_diferida.apps.TransaccionCompletaDiferidaConfig',
     'transaccion_completa_mall.apps.TransaccionCompletaMallConfig',
