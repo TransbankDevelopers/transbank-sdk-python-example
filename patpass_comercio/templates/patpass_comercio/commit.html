@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% load static highlight_code %}
+
+{% block title %}Patpass Comercio - Confirmar Registro{% endblock %}
+
+{% block content %}
+
+{% component "breadcrumbs" items=[
+    {"name": "Inicio", "url": "/"},
+    {"name": "Patpass Comercio", "url": "/patpass-comercio/"},
+    {"name": "Confirmar registro", "url": "/patpass-comercio/commit"}
+] %}{% endcomponent %}
+
+<h1>Patpass Comercio - Confirmar Registro</h1>
+
+<p class="mb-32">
+  Es necesario confirmar el registro; este solo se puede hacer una sola vez o retornará error.
+</p>
+
+<h2 id="data">Paso 1: Datos recibidos</h2>
+<p class="mb-32">
+  Luego de que se termina el flujo en el formulario de inscripción recibirás un POST con la siguiente respuesta.
+</p>
+
+{% filter highlight_code:"json" %}
+{
+  "J_TOKEN": "{{ token }}"
+}
+{% endfilter %}
+
+<h2 id="request" class="mt-32">Paso 2: Petición</h2>
+<p class="mb-32">
+  Usarás el token recibido para confirmar la inscripción usando el método <code>status</code> de PatpassComercio.
+</p>
+
+{% filter highlight_code:"python" %}
+resp = inscription.status(token)
+{% endfilter %}
+
+<h2 id="response" class="mt-32">Paso 3: Respuesta</h2>
+<p class="mb-32">
+  Transbank contestará con lo siguiente. Debes guardar esta información; lo importante es validar que
+  el atributo <code>authorized</code> sea igual a <code>true</code>.
+</p>
+
+{{ response_payload|prettyjson|highlight_code:"json" }}
+
+<h2 id="form" class="mt-32">¡Listo!</h2>
+<p class="mb-32">
+  Una vez realizada la inscripción y confirmada, puedes visualizar el voucher.
+</p>
+
+<div class="tbk-card">
+  <span class="tbk-card-title">Formulario de redirección</span>
+  <div class="input-container mb-32">
+    <label for="tokenComercio" class="tbk-label">Token</label>
+    <input type="text" id="tokenComercio" class="tbk-input-text" value="{{ token }}" disabled>
+  </div>
+  <div class="tbk-card-footer">
+    <form action="{{ voucher_url }}" method="POST">
+      <input type="hidden" name="tokenComercio" value="{{ token }}">
+      <button class="tbk-button primary">VER VOUCHER</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
