@@ -56,14 +56,14 @@ resp = inscription.start(
 )
 {% endfilter %}
 
-<h2 id="response">Paso 2: Respuesta</h2>
+<h2 id="response" class="mt-32">Paso 2: Respuesta</h2>
 <p class="mb-32">
   Una vez iniciada la inscripción, recibirás los siguientes datos de respuesta:
 </p>
 
 {{ response_data|prettyjson|highlight_code:"json" }}
 
-<h2 id="form">Paso 3: Creación del formulario</h2>
+<h2 id="form" class="mt-32">Paso 3: Creación del formulario</h2>
 <p class="mb-32">
   Utiliza los datos obtenidos durante la inscripción para generar un formulario, proporcionando al
   Tarjetahabiente una experiencia de inscripción fluida y segura.
@@ -76,7 +76,7 @@ resp = inscription.start(
 </form>
 {% endfilter %}
 
-<h2 id="example">Ejemplo</h2>
+<h2 id="example" class="mt-32">Ejemplo</h2>
 <p class="mb-32">
   Para poder iniciar la inscripción, se necesitan los siguientes datos:
 </p>
