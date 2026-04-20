@@ -1,0 +1,102 @@
+{% extends "layout.html" %}
+{% load static highlight_code %}
+
+{% block title %}Patpass Comercio - Iniciar Transacción{% endblock %}
+
+{% block content %}
+
+{% component "breadcrumbs" items=[
+    {"name": "Inicio", "url": "/"},
+    {"name": "Patpass Comercio", "url": "/patpass-comercio/"}
+] %}{% endcomponent %}
+
+<h1>Patpass Comercio - Iniciar Transacción</h1>
+
+<p class="mb-16">
+  En este paso inicial, procederemos a inscribir una tarjeta con el objetivo de obtener un identificador único.
+  Esto nos permitirá redirigir al Tarjetahabiente hacia el formulario de inscripción en el siguiente paso.
+</p>
+
+<p class="mb-32">
+  Todas las transacciones de este proyecto ejemplo son realizadas en ambiente de integración.
+</p>
+
+<h2 id="request">Paso 1: Petición</h2>
+<p class="mb-32">
+  Para comenzar, importa la librería Patpass Comercio y luego inicia una inscripción. Tener en cuenta:
+  el ambiente de integración no admite direcciones locales en los atributos <code>url</code> y <code>final_url</code>.
+</p>
+
+{% filter highlight_code:"python" %}
+from transbank.patpass_comercio.inscription import Inscription
+from transbank.common.integration_commerce_codes import IntegrationCommerceCodes
+from transbank.common.integration_api_keys import IntegrationApiKeys
+
+inscription = Inscription.build_for_integration(
+    IntegrationCommerceCodes.PATPASS_COMERCIO,
+    IntegrationApiKeys.PATPASS_COMERCIO
+)
+
+resp = inscription.start(
+    return_url,
+    name,
+    last_name,
+    second_last_name,
+    rut,
+    service_id,
+    final_url,
+    max_amount,
+    phone,
+    cell_phone,
+    patpass_name,
+    person_email,
+    commerce_email,
+    address,
+    city
+)
+{% endfilter %}
+
+<h2 id="response">Paso 2: Respuesta</h2>
+<p class="mb-32">
+  Una vez iniciada la inscripción, recibirás los siguientes datos de respuesta:
+</p>
+
+{{ response_data|prettyjson|highlight_code:"json" }}
+
+<h2 id="form">Paso 3: Creación del formulario</h2>
+<p class="mb-32">
+  Utiliza los datos obtenidos durante la inscripción para generar un formulario, proporcionando al
+  Tarjetahabiente una experiencia de inscripción fluida y segura.
+</p>
+
+{% filter highlight_code:"html" %}
+<form action="{{ response_data.url }}" method="POST">
+  <input type="hidden" name="tokenComercio" value="{{ response_data.token }}" />
+  <input type="submit" value="Inscribir" />
+</form>
+{% endfilter %}
+
+<h2 id="example">Ejemplo</h2>
+<p class="mb-32">
+  Para poder iniciar la inscripción, se necesitan los siguientes datos:
+</p>
+
+<div class="mb-32">
+  {% component "data_table" data=request_data %}{% endcomponent %}
+</div>
+
+<form action="{{ response_data.url }}" method="POST">
+  <div class="tbk-card">
+    <span class="tbk-card-title">Formulario de redirección</span>
+    <div class="input-container mb-32">
+      <label for="tokenComercio" class="tbk-label">Token</label>
+      <input type="text" id="tokenComercio" class="tbk-input-text" value="{{ response_data.token }}" disabled>
+      <input type="hidden" name="tokenComercio" value="{{ response_data.token }}">
+    </div>
+    <div class="tbk-card-footer">
+      <button class="tbk-button primary">INSCRIBIR</button>
+    </div>
+  </div>
+</form>
+
+{% endblock %}
