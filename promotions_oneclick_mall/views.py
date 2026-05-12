@@ -65,18 +65,14 @@ def start(request):
 
         resp = inscription.start(username, email, response_url)
 
-        context = {
-            "app_name": APP_NAME,
-            "app_title": APP_TITLE,
-            "app_url": APP_URL,
-            "app_breadcrumb": APP_BREADCRUMB,
+        context = base_context({
             "request_data": {
                 "username": username,
                 "email": email,
                 "response_url": response_url,
             },
             "response_data": resp,
-        }
+        })
 
         return render(request, "promotions_oneclick_mall/start.html", context)
     except Exception as e:
@@ -103,11 +99,7 @@ def finish(request):
 
         username = request.session.get("username", "")
         tbk_user = resp["tbk_user"]
-        context = {
-            "app_name": APP_NAME,
-            "app_title": APP_TITLE,
-            "app_url": APP_URL,
-            "app_breadcrumb": APP_BREADCRUMB,
+        context = base_context({
             "request_data": {
                 "username": username,
                 "tbk_user": tbk_user,
@@ -119,7 +111,7 @@ def finish(request):
             "response_data": resp,
             "child_commerce_code1": get_env("ONECLICK_MALL_PROMOTIONS_CHILD1_COMMERCE_CODE"),
             "child_commerce_code2": get_env("ONECLICK_MALL_PROMOTIONS_CHILD2_COMMERCE_CODE"),
-        }
+        })
 
         return render(request, "promotions_oneclick_mall/finish.html", context)
     except Exception as e:
