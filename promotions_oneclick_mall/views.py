@@ -4,6 +4,7 @@ from decimal import Decimal, InvalidOperation
 
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
+from transbank.error.transbank_error import TransbankError
 from transbank.webpay.oneclick.mall_bin_info import MallBinInfo
 from transbank.webpay.oneclick.mall_inscription import MallInscription
 from transbank.webpay.oneclick.mall_transaction import MallTransaction
@@ -71,7 +72,18 @@ def required_integer_param(request, key):
 
 
 def render_error(request, exception):
-    return render(request, ERROR_TEMPLATE, {"error": str(exception)})
+    return render(request, ERROR_TEMPLATE, {"error": displayable_error_message(exception)})
+
+
+def displayable_error_message(exception):
+    current = exception
+
+    while current:
+        if isinstance(current, TransbankError):
+            return str(current)
+        current = current.__cause__ or current.__context__
+
+    return "Ocurrió un error inesperado al procesar la operación."
 
 
 @require_GET
