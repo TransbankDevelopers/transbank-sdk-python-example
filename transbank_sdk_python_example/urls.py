@@ -25,6 +25,7 @@ urlpatterns = [
     path('webpay-plus-mall/', include('webpay_plus_mall.urls', namespace='webpay_plus_mall')),
     path('webpay-plus-mall-deferred/', include('webpay_plus_mall_deferred.urls', namespace='webpay_plus_mall_deferred')),
     path('oneclick-mall/', include('oneclick_mall.urls', namespace='oneclick_mall')),
+    path('promotions-oneclick-mall/', include('promotions_oneclick_mall.urls', namespace='promotions_oneclick_mall')),
     path('oneclick-mall-diferido/', include('oneclick_mall_deferred.urls', namespace='oneclick_mall_deferred')),
     path('patpass-comercio/', include('patpass_comercio.urls', namespace='patpass_comercio')),
     path('transaccion-completa/', include('transaccion_completa.urls', namespace='transaccion_completa')),

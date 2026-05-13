@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'webpay_plus_mall.apps.WebpayPlusMallConfig',
     'webpay_plus_mall_deferred.apps.WebpayPlusMallDeferredConfig',
     'oneclick_mall.apps.OneclickMallConfig',
+    'promotions_oneclick_mall.apps.PromotionsOneclickMallConfig',
     'oneclick_mall_deferred.apps.OneclickMallDeferredConfig',
     'patpass_comercio.apps.PatpassComercioConfig',
     'transaccion_completa.apps.TransaccionCompletaConfig',
