@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+{% load static highlight_code %}
+
+{% block title %}Transacción Completa Diferida - Confirmar transacción{% endblock %}
+
+{% block content %}
+
+{% component "breadcrumbs" items=[
+    {"name": "Inicio", "url": "/"},
+    {"name": "Transacción Completa Diferida", "url": "/transaccion-completa-diferida/"},
+    {"name": "Confirmar", "url": "/transaccion-completa-diferida/commit/"}
+] %}{% endcomponent %}
+
+<h1>Transacción Completa Diferida - Confirmar transacción</h1>
+<p class="mb-32">
+    En este paso crucial, procederemos a confirmar la transacción con el objetivo de notificar a Transbank que hemos recibido la transacción de manera exitosa. Es fundamental destacar que si no se confirma la transacción, esta será caducada.
+</p>
+
+<h2 id="request">Paso 1: Petición</h2>
+<p class="mb-32">
+    Para confirmar la transacción, debes enviar el token correspondiente. En el caso de pagos a plazos, también debes incluir el ID de la consulta de cuotas. En algunos casos, será necesario proporcionar el índice del periodo diferido y un valor boolean indicando si se tomará el periodo de gracia.
+</p>
+
+{% filter highlight_code:"python" %}
+tx = Transaction.build_for_integration(
+        IntegrationCommerceCodes.TRANSACCION_COMPLETA_DEFERRED,
+        IntegrationApiKeys.WEBPAY
+    )
+resp = tx.commit(
+    token,
+    id_query_installments, # opcional
+    deferred_period_index, # opcional
+    grace_period # opcional
+)
+{% endfilter %}
+
+<h2 class="mt-32" id="response">Paso 2: Respuesta</h2>
+<p class="mb-32">
+    Una vez que la transacción ha sido confirmada Transbank proporcionará la siguiente información. Es fundamental conservar esta respuesta y verificar que el campo "response_code" tenga un valor de cero y que el campo "status" sea "AUTHORIZED".
+</p>
+
+{{ response_data|prettyjson|highlight_code:"json" }}
+
+<h2 class="mt-32" id="form">¡Transacción confirmada!</h2>
+<p class="mb-16">Ahora que se ha confirmado la transacción, puedes capturar el monto previamente autorizado. El monto a capturar puede ser igual o menor al monto autorizado. La captura debe efectuarse dentro de un plazo máximo de 7 días calendario.</p>
+
+<ul class="bullet-list">
+    <li><span class="fw-700">Capturar:</span>  Captura un monto igual o menor al previamente autorizado.</li>
+    <li><span class="fw-700">Consultar Estado:</span> Hasta 7 días después de realizada la transacción, podrás
+        consultar el estado de la transacción.</li>
+</ul>
+
+<form method="GET" action="{% url 'transaccion_completa_diferida:capture' %}">
+    <div class="tbk-card">
+        <div class="input-container mb-32">
+            <label for="amount" class="tbk-label">Monto a capturar</label>
+            <input type="text" id="amount" name="amount" class="tbk-input-text" value="{{ amount }}">
+            <input type="hidden" name="token" value="{{ request_data.token }}">
+            <input type="hidden" name="buy_order" value="{{ response_data.buy_order }}">
+            <input type="hidden" name="authorization_code" value="{{ response_data.authorization_code }}">
+        </div>
+
+        <div class="tbk-card-footer">
+            <button type="submit" class="tbk-button primary">CAPTURAR</button>
+        </div>
+    </div>
+</form>
+
+<div class="mt-32 mb-32">
+    <a href="{% url 'transaccion_completa_diferida:status' %}?token={{ request_data.token }}" class="tbk-button primary">
+        CONSULTAR ESTADO
+    </a>
+</div>
+
+{% endblock %}

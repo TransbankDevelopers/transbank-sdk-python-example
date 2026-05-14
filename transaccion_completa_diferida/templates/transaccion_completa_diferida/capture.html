@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+{% load static highlight_code %}
+
+{% block title %}Transacción Completa Diferida - Capturar transacción{% endblock %}
+
+{% block content %}
+
+{% component "breadcrumbs" items=[
+    {"name": "Inicio", "url": "/"},
+    {"name": "Transacción Completa Diferida", "url": "/transaccion-completa-diferida/"},
+    {"name": "Capturar", "url": "/transaccion-completa-diferida/capture/"}
+] %}{% endcomponent %}
+
+<h1>Transacción Completa Diferida - Capturar transacción</h1>
+<p class="mb-32">
+    En este paso debemos capturar la transacción para realmente capturar el dinero que había sido previamente reservado al hacer la transacción.
+</p>
+
+<h2 id="request">Paso 1: Petición</h2>
+<p class="mb-32">
+    Para capturar una transacción, necesitaremos el Token, la Orden de compra, el Código de autorización y el monto a capturar.
+</p>
+
+{% filter highlight_code:"python" %}
+tx = Transaction.build_for_integration(
+    IntegrationCommerceCodes.TRANSACCION_COMPLETA_DEFERRED,
+    IntegrationApiKeys.WEBPAY
+)
+resp = tx.capture(token, buy_order, authorization_code, amount)
+{% endfilter %}
+
+<h2 class="mt-32" id="response">Paso 2: Respuesta</h2>
+<p class="mb-32">
+    Una vez capturada la transacción, recibirás los siguientes datos de respuesta:
+</p>
+
+{{ response_data|prettyjson|highlight_code:"json" }}
+
+<h2 class="mt-32" id="form">Otras utilidades</h2>
+<p class="mb-16">
+    Con la transacción capturada, puedes mostrar al usuario una página de éxito de la transacción, proporcionándole la confirmación de que el proceso se ha completado con éxito.
+</p>
+
+<p class="mb-32">Después de capturar la transacción, podrás realizar otras operaciones útiles:</p>
+<ul class="bullet-list mb-32">
+    <li><span class="fw-700">Reembolsar:</span> Puedes reversar o anular el pago según ciertas condiciones comerciales.</li>
+    <li><span class="fw-700">Consultar Estado:</span> Hasta 7 días después de realizada la transacción, podrás consultar el estado de la transacción.</li>
+</ul>
+
+<form method="GET" action="{% url 'transaccion_completa_diferida:refund' %}">
+    <div class="tbk-card">
+        <div class="input-container mb-32">
+            <label for="amount" class="tbk-label">Monto a reembolsar</label>
+            <input type="text" id="amount" name="amount" class="tbk-input-text" value="{{ amount }}">
+            <input type="hidden" name="token" value="{{ token }}">
+        </div>
+
+        <div class="tbk-card-footer">
+            <button type="submit" class="tbk-button primary">REEMBOLSAR</button>
+        </div>
+    </div>
+</form>
+
+<div class="mt-32 mb-32">
+    <a href="{% url 'transaccion_completa_diferida:status' %}?token={{ token }}" class="tbk-button primary">
+        CONSULTAR ESTADO
+    </a>
+</div>
+
+{% endblock %}

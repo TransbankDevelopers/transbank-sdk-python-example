@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% load static highlight_code %}
+
+{% block title %}Transacción Completa Diferida - Consultar cuotas{% endblock %}
+
+{% block content %}
+
+{% component "breadcrumbs" items=[
+    {"name": "Inicio", "url": "/"},
+    {"name": "Transacción Completa Diferida", "url": "/transaccion-completa-diferida/"},
+    {"name": "Consultar cuotas", "url": "/transaccion-completa-diferida/installments/"}
+] %}{% endcomponent %}
+
+<h1>Transacción Completa Diferida - Consultar cuotas</h1>
+<p class="mb-32">
+    En esta etapa, realizaremos una consulta de cuotas para conocer sus condiciones. Es importante destacar que este paso es opcional y se utiliza únicamente si deseas ofrecer opciones de pago a plazos.
+
+</p>
+
+<h2 id="request">Paso 1: Petición</h2>
+<p class="mb-32">
+    Para llevar a cabo la consulta de cuotas, debemos enviar los siguientes datos relevantes.
+</p>
+
+{% filter highlight_code:"python" %}
+tx = Transaction.build_for_integration(
+        IntegrationCommerceCodes.TRANSACCION_COMPLETA_DEFERRED,
+        IntegrationApiKeys.WEBPAY
+    )
+
+resp = tx.installments(token, installments_number)
+{% endfilter %}
+
+<h2 id="response">Paso 2: Respuesta</h2>
+<p class="mb-32">
+    Una vez realizada la consulta de cuotas, recibirás los siguientes datos de respuesta:
+</p>
+
+{{ response_data|prettyjson|highlight_code:"json" }}
+
+<h2 class="mt-32">Confirmar Transacción</h2>
+<p class="mb-32">
+    Si decides utilizar cuotas y estás satisfecho con las condiciones obtenidas en la consulta, el siguiente paso sería confirmar la transacción.
+</p>
+
+<form id="form" method="GET" action="{% url 'transaccion_completa_diferida:commit' %}" class="tbk-form">
+    {% csrf_token %}
+    <div class="tbk-card">
+        <div class="input-container mb-16">
+            <label for="token" class="tbk-label">Token</label>
+            <input type="text" id="token" name="token" class="tbk-input-text" value="{{ request_data.token }}" readonly>
+        </div>
+
+        <div class="input-container mb-32">
+            <label for="idQueryInstallments" class="tbk-label">ID de consulta de cuotas (Opcional)</label>
+            <input type="text" id="idQueryInstallments" name="idQueryInstallments" class="tbk-input-text" value="{{ response_data.id_query_installments|default:'' }}">
+        </div>
+
+        <div class="tbk-card-footer">
+            <button type="submit" class="tbk-button primary">
+                CONFIRMAR TRANSACCIÓN
+            </button>
+        </div>
+    </div>
+</form>
+
+{% endblock %}

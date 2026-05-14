@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+{% load static highlight_code %}
+
+{% block title %}Patpass Comercio - Voucher{% endblock %}
+
+{% block content %}
+
+{% component "breadcrumbs" items=[
+    {"name": "Inicio", "url": "/"},
+    {"name": "Patpass Comercio", "url": "/patpass-comercio/"},
+    {"name": "Voucher", "url": "/patpass-comercio/voucher"}
+] %}{% endcomponent %}
+
+<h1>Patpass Comercio - Voucher</h1>
+
+<p class="mb-32">
+  La inscripción ya se encuentra finalizada. Una vez finalizada la inscripción puedes seguir consultando por el voucher.
+</p>
+
+<div id="form" class="tbk-card">
+  <span class="tbk-card-title">Voucher</span>
+  <div class="input-container mb-32">
+    <label for="tokenComercio" class="tbk-label">Token</label>
+    <input type="text" id="tokenComercio" class="tbk-input-text" value="{{ token }}" disabled>
+  </div>
+  <div class="tbk-card-footer">
+    <form action="{{ voucher_url }}" method="POST">
+      <input type="hidden" name="tokenComercio" value="{{ token }}">
+      <button class="tbk-button primary">VER VOUCHER</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

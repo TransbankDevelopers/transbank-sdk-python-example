@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+{% load static highlight_code %}
+
+{% block title %}Transacción Completa Mall Diferido - Capturar transacción{% endblock %}
+
+{% block content %}
+
+{% component "breadcrumbs" items=[
+    {"name": "Inicio", "url": "/"},
+    {"name": "Transacción Completa Mall Diferido", "url": "/transaccion-completa-mall-diferido/"},
+    {"name": "Capturar", "url": "/transaccion-completa-mall-diferido/capture/"}
+] %}{% endcomponent %}
+
+<h1>Transacción Completa Mall Diferido - Capturar transacción</h1>
+<p class="mb-32">En este paso debemos capturar la transacción para realmente capturar el dinero que habia sido
+    previamente reservado al hacer la transacción.</p>
+
+<h2 id="confirmar">Paso 1: Petición</h2>
+<p class="mb-32">Para capturar una transacción, necesitaremos el Token, la Orden de compra, el Código de autorización
+    y el monto a capturar.</p>
+
+{% filter highlight_code:"python" %}
+tx = MallTransaction.build_for_integration(
+        IntegrationCommerceCodes.TRANSACCION_COMPLETA_MALL_DEFERRED,
+        IntegrationApiKeys.WEBPAY
+    )
+
+resp = tx.capture(token, child_commerce_code, child_buy_order, authorization_code, amount)
+{% endfilter %}
+
+<h2 id="confirm">Paso 2: Respuesta</h2>
+{{ response_data|prettyjson|highlight_code:"json" }}
+
+<h2 class="mt-32">¡Listo!</h2>
+<p>Después de capturar la transacción, podrás realizar otras operaciones útiles:</p>
+
+<form method="GET" action="{% url 'transaccion_completa_mall_diferido:refund' %}" data-loading-form="true">
+    <div class="tbk-card">
+        <div class="input-container mb-32">
+            <label for="amount" class="tbk-label">Monto a reembolsar</label>
+            <input type="text" id="amount" name="amount" class="tbk-input-text" value="{{ request_data.amount }}">
+            <input type="hidden" name="token" value="{{ request_data.token }}">
+            <input type="hidden" name="buy_order" value="{{ request_data.child_buy_order }}">
+            <input type="hidden" name="commerce_code" value="{{ request_data.child_commerce_code }}">
+        </div>
+        <div class="tbk-card-footer">
+            <button type="submit" class="tbk-button primary loading-button" data-loading-button="true">
+                <span class="loading-spinner" aria-hidden="true"></span>
+                <span>REEMBOLSAR</span>
+            </button>
+        </div>
+    </div>
+</form>
+
+<div class="mt-32 mb-32">
+    <a href="{% url 'transaccion_completa_mall_diferido:status' %}?token={{ request_data.token }}" class="tbk-button primary">
+        CONSULTAR ESTADO
+    </a>
+</div>
+
+{% endblock %}

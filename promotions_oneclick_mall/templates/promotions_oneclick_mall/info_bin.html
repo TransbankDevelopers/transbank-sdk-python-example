@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% load static highlight_code %}
+
+{% block title %}{{ app_title }} - Consulta servicio de bines{% endblock %}
+
+{% block content %}
+
+{% component "breadcrumbs" items=[
+    {"name": "Inicio", "url": "/"},
+    app_breadcrumb,
+    {"name": "Consulta servicio de bines", "url": "#"}
+] %}{% endcomponent %}
+
+<h1>{{ app_title }} - Consulta servicio de bines</h1>
+
+<p class="mb-32">
+  Con esta operación puedes consultar el BIN asociado al medio de pago inscrito usando el valor de
+  <code>tbk_user</code>. Si el comercio no tiene habilitado este servicio, la respuesta incluirá un error.
+</p>
+
+<h2 id="request">Paso 1: Petición</h2>
+<p class="mb-32">
+  Para realizar la consulta, necesitarás el <code>tbk_user</code> obtenido al finalizar la inscripción.
+  Utiliza ese identificador para efectuar una llamada a <code>MallBinInfo</code>.
+</p>
+
+{% filter highlight_code:"python" %}
+resp = bin_info.query_bin(tbk_user)
+{% endfilter %}
+
+<div class="mb-32 mt-32">
+  {% component "data_table" data=request_data %}{% endcomponent %}
+</div>
+
+<h2 id="response">Paso 2: Respuesta</h2>
+<p class="mb-32">
+  Transbank responderá con la información del BIN consultado.
+</p>
+
+<div class="mb-32">
+  {{ response_data|prettyjson|highlight_code:"json" }}
+</div>
+
+{% endblock %}
