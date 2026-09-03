@@ -6,7 +6,7 @@ Proyecto de ejemplo mostrando el paso a paso de como usar el SDK Python de trans
 
 ## Requisitos
 
-- Python 3.13.3
+- Python 3.13.6
 - Django 5.2.4
 - pipenv
 
@@ -14,27 +14,27 @@ Proyecto de ejemplo mostrando el paso a paso de como usar el SDK Python de trans
 
 Sigue estos pasos después de clonar el repositorio para configurar correctamente el proyecto:
 
-1. **Configura las variables de entorno**  
+1. **Configura las variables de entorno**
 
 Crea un archivo `.env` en la raíz del proyecto. Puedes usar `.env.example` como plantilla de referencia.
 
-2. **Instala las dependencias del proyecto**  
+2. **Instala las dependencias del proyecto**
 
 ```bash
 cd ruta/del/proyecto
 pipenv install
 ```
 
-3. **Activa el entorno virtual**  
+3. **Activa el entorno virtual**
 
 ```bash
 pipenv shell
 ```
 
-4. **Aplica las migraciones de base de datos (requeridas para la gestión de sesiones)**  
+4. **Aplica las migraciones de base de datos (requeridas para la gestión de sesiones)**
 
 ```bash
-python manage.py migrate 
+python manage.py migrate
 ```
 
 ## Ejecución Desarrollo
@@ -44,6 +44,25 @@ Para poder correr el proyecto en modo desarrollo, debes utilizar el siguiente co
 ```bash
 python manage.py runserver
 ```
+
+### Uso de Dev Container
+
+Al crear el Dev Container, `post-create.sh` instala Pipenv y ejecuta `pipenv install`. Para iniciar el proyecto:
+
+1. Crea `.env` en la raíz del proyecto usando `.env.example` como referencia.
+2. Ejecuta las migraciones:
+
+```bash
+pipenv run python manage.py migrate
+```
+
+3. Inicia el servidor de desarrollo:
+
+```bash
+pipenv run python manage.py runserver 0.0.0.0:8000
+```
+
+El puerto `8000` se reenvía automáticamente desde el contenedor.
 
 ### Forma de trabajo
 
