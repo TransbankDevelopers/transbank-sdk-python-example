@@ -9,3 +9,5 @@ RUN find /etc/apt/sources.list.d -maxdepth 1 -type f -iname '*yarn*' -delete \
     && apt-get install -y --no-install-recommends ripgrep \
     && rm -rf /var/lib/apt/lists/* \
     && test "$(command -v rg)" = "/usr/bin/rg"
+
+USER vscode
