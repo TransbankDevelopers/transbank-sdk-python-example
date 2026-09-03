@@ -9,6 +9,7 @@ RUN find /etc/apt/sources.list.d -maxdepth 1 -type f -iname '*yarn*' -delete \
     && apt-get update \
     && apt-get install -y --no-install-recommends ripgrep \
     && rm -rf /var/lib/apt/lists/* \
+    && ldconfig \
     && test "$(command -v rg)" = "/usr/bin/rg" \
     && ln -sf /usr/local/bin/python3.13 /usr/local/bin/python3 \
     && ln -sf /usr/local/bin/python3.13 /usr/local/bin/python
