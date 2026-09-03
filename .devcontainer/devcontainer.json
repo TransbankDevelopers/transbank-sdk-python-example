@@ -1,0 +1,91 @@
+{
+  "name": "Transbank SDK Python Example",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "forwardPorts": [
+    8000
+  ],
+  "remoteUser": "vscode",
+  "mounts": [
+    "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached"
+  ],
+  "portsAttributes": {
+    "8000": {
+      "label": "Django development server",
+      "onAutoForward": "notify"
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers-extra/features/zsh-plugins:0": {
+      "plugins": "git zsh-autosuggestions zsh-syntax-highlighting",
+      "omzPlugins": "https://github.com/zsh-users/zsh-autosuggestions https://github.com/zsh-users/zsh-syntax-highlighting"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "explorer.confirmDelete": false,
+        "editor.bracketPairColorization.enabled": true,
+        "editor.guides.bracketPairs": true,
+        "editor.guides.bracketPairsHorizontal": true,
+        "editor.linkedEditing": true,
+        "editor.codeLens": true,
+        "editor.inlineSuggest.enabled": true,
+        "editor.formatOnSave": true,
+        "editor.suggestSelection": "first",
+        "editor.rulers": [
+          120
+        ],
+        "todo-tree.ripgrep.ripgrep": "/usr/bin/rg",
+        "files.insertFinalNewline": true,
+        "files.trimTrailingWhitespace": true,
+        "git.enableCommitSigning": false,
+        "extensions.autoUpdate": false,
+        "extensions.autoCheckUpdates": false,
+        "extensions.ignoreRecommendations": true,
+        "remote.containers.installRecommendedExtensions": false,
+        "settingsSync.enabled": false,
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.analysis.autoSearchPaths": true,
+        "python.analysis.diagnosticMode": "workspace",
+        "files.watcherExclude": {
+          "**/__pycache__/**": true,
+          "**/.venv/**": true,
+          "**/staticfiles/**": true
+        },
+        "files.associations": {
+          "*.html": "django-html"
+        },
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": {
+          "zsh": {
+            "path": "/usr/bin/zsh"
+          }
+        },
+        "[json]": {
+          "editor.defaultFormatter": "vscode.json-language-features"
+        },
+        "[yaml]": {
+          "editor.defaultFormatter": "redhat.vscode-yaml"
+        }
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "batisteo.vscode-django",
+        "editorconfig.editorconfig",
+        "usernamehw.errorlens",
+        "Gruntfuggly.todo-tree",
+        "naumovs.color-highlight",
+        "yzhang.markdown-all-in-one",
+        "github.vscode-github-actions",
+        "ms-azuretools.vscode-docker",
+        "redhat.vscode-yaml"
+      ]
+    }
+  }
+}
