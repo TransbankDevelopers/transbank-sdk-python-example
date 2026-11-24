@@ -4,5 +4,11 @@ services:
       context: ..
       dockerfile: .devcontainer/Dockerfile
     command: sleep infinity
+    environment:
+      PIPENV_VENV_IN_PROJECT: "1"
     volumes:
-      - ../..:/workspaces:cached
+      - ..:/workspaces/transbank-sdk-python-example:cached
+      - venv:/workspaces/transbank-sdk-python-example/.venv
+
+volumes:
+  venv:

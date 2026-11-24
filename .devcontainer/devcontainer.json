@@ -2,8 +2,8 @@
   "name": "Transbank SDK Python Example",
   "dockerComposeFile": "docker-compose.yml",
   "service": "app",
-  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
-  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "workspaceFolder": "/workspaces/transbank-sdk-python-example",
+  "postCreateCommand": "bash /workspaces/transbank-sdk-python-example/.devcontainer/post-create.sh",
   "shutdownAction": "stopCompose",
   "forwardPorts": [
     8000
@@ -48,7 +48,7 @@
         "extensions.ignoreRecommendations": true,
         "remote.containers.installRecommendedExtensions": false,
         "settingsSync.enabled": false,
-        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.defaultInterpreterPath": "/workspaces/transbank-sdk-python-example/.venv/bin/python",
         "python.analysis.autoSearchPaths": true,
         "python.analysis.diagnosticMode": "workspace",
         "files.watcherExclude": {
